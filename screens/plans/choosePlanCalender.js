@@ -22,7 +22,6 @@ const ChoosePlanCalender = () => {
               >
                 Pro
               </Text>
-             <Text>
             <TouchableOpacity
               style={{
                 backgroundColor: "#005858",
