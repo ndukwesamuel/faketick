@@ -113,8 +113,9 @@ export const NavigationScreen = () => {
     <NavigationContainer>
       {/* <Login /> */}
       {/* <StartScreen /> */}
-      {user_data?.data?.token && <MainScreen />}
-      {!user_data?.data?.token && <StartScreen />}
+      {/* {user_data?.data?.token && <MainScreen />}
+      {!user_data?.data?.token && <StartScreen />} */}
+        <MainScreen/>
       <Toast />
     </NavigationContainer>
   );
