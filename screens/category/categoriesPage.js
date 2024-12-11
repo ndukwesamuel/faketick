@@ -22,7 +22,7 @@ const CategoriesPage = () => {
                   >
                     <Image
                       source={planeIcon}
-                      resizeMethod="contain"
+                      resizeMode="contain"
                       style={styles.categoryCardIcon({
                         height: 60,
                         width: 60,
@@ -37,7 +37,7 @@ const CategoriesPage = () => {
                   >
                     <Image
                       source={planeIcon}
-                      resizeMethod="contain"
+                      resizeMode="contain"
                       style={styles.categoryCardIcon({
                         height: 60,
                         width: 60,
@@ -54,7 +54,7 @@ const CategoriesPage = () => {
                   >
                     <Image
                       source={planeIcon}
-                      resizeMethod="contain"
+                      resizeMode="contain"
                       style={styles.categoryCardIcon({
                         height: 60,
                         width: 60,
@@ -69,7 +69,7 @@ const CategoriesPage = () => {
                   >
                     <Image
                       source={planeIcon}
-                      resizeMethod="contain"
+                      resizeMode="contain"
                       style={styles.categoryCardIcon({
                         height: 60,
                         width: 60,
@@ -86,7 +86,7 @@ const CategoriesPage = () => {
                   >
                     <Image
                       source={planeIcon}
-                      resizeMethod="contain"
+                      resizeMode="contain"
                       style={styles.categoryCardIcon({
                         height: 60,
                         width: 60,
