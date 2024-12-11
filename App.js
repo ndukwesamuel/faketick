@@ -32,6 +32,8 @@ import Login from "./screens/Login";
 import TicketDrawer from "./Navigation/TicketDrawer";
 
 const queryClient = new QueryClient();
+const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+
 
 const Stack = createNativeStackNavigator();
 const screenOptions = {
@@ -58,6 +60,7 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
+  console.log(API_BASEURL)
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
