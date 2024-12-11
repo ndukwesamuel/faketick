@@ -20,6 +20,14 @@ import axios from "axios";
 import Checkbox from "expo-checkbox";
 const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
 
+console.log({
+  aaa: API_BASEURL,
+});
+const fetchStates = async () => {
+  const response = await axios.get(`${API_BASEURL}{{base_url}}/v1/states`);
+  return response.data;
+};
+
 export default function SignUp({ navigation, onSetAuth }) {
   const [isChecked, setChecked] = useState(false);
   const [firstName, setFirstName] = useState("");

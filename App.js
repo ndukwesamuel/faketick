@@ -27,7 +27,7 @@ import OtpScreen from "./screens/OtpScreen";
 
 import UserNavigation from "./Navigation/UserNavigation";
 import Security from "./components/Auth/Security";
-import { UserProfile_Fun } from "./Redux/AuthSlice";
+import { UserProfile_Fun, reset_login } from "./Redux/AuthSlice";
 import Login from "./screens/Login";
 import TicketDrawer from "./Navigation/TicketDrawer";
 
@@ -106,15 +106,10 @@ export const NavigationScreen = () => {
 
   const [country, setCountry] = useState("Loading...");
 
-  console.log({
-    kkkk: user_data?.data?.token,
-  });
   return (
     <NavigationContainer>
-      {/* <Login /> */}
-      {/* <StartScreen /> */}
-      {user_data?.data?.token && <MainScreen />}
-      {!user_data?.data?.token && <StartScreen />}
+      {user_data?.token && <MainScreen />}
+      {!user_data?.token && <StartScreen />}
       <Toast />
     </NavigationContainer>
   );

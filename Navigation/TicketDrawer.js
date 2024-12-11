@@ -9,6 +9,8 @@ import {
 import { useDispatch } from "react-redux";
 import UserNavigation from "./UserNavigation";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { reset_login } from "../Redux/AuthSlice";
+import ImagePreviewScreen from "../screens/TicketingScreen/ImagePreviewScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -18,6 +20,7 @@ function CustomDrawerContent(props) {
 
   const handleLogout = () => {
     // Implement your logout logic here
+    dispatch(reset_login());
   };
 
   // Dummy user data (replace with real user data from state or props)
@@ -61,7 +64,7 @@ function CustomDrawerContent(props) {
           onPress={() => navigation.navigate("Settings")} // Navigate to the Settings screen
         />
         <DrawerItem
-          label="Logout"
+          label={() => <Text style={styles.settingsText}>Logout</Text>}
           labelStyle={{ color: "white" }}
           onPress={handleLogout}
         />
@@ -90,6 +93,12 @@ export default function TicketDrawer() {
         name="Home_screen"
         component={UserNavigation}
       />
+
+      <Drawer.Screen
+        options={{ drawerLabel: "Image" }}
+        name="image_preview"
+        component={ImagePreviewScreen}
+      />
     </Drawer.Navigator>
   );
 }
@@ -115,7 +124,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   settingsContainer: {
-    borderTopWidth: 1,
+    // borderTopWidth: 1,
     borderTopColor: "gray",
     padding: 10,
     top: "100%",

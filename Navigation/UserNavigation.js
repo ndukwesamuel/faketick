@@ -34,6 +34,7 @@ import CancelDelivery from "../screens/UserScreens/CancelDelivery";
 import OrderStatus from "../screens/UserScreens/OrderStatus";
 import TicketingScreen from "../screens/TicketingScreen";
 import CardScreen from "../screens/TicketingScreen/Card";
+import ImagePreviewScreen from "../screens/TicketingScreen/ImagePreviewScreen";
 // import DeliveredOrders from "../screens/Orders/DeliveredOrders";
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,8 @@ export default function UserNavigation() {
     >
       <Stack.Screen name="Home" component={TicketingScreen} />
       <Stack.Screen name="card" component={CardScreen} />
+      <Stack.Screen name="ImagePreview" component={ImagePreviewScreen} />
+
       {/* <Stack.Screen
         name="RestaurantMenuScreen"
         component={RestaurantMenuScreen}
