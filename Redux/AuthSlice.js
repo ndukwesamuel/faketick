@@ -34,7 +34,7 @@ const Login_Fun_Service = async (data) => {
   try {
     const response = await axios.post(url, data);
     console.log({ response: response.data });
-    // return response.data;
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -54,7 +54,7 @@ export const Login_Fun = createAsyncThunk(
         type: "error",
         text1: `${errorMessage}`,
       });
-      // return thunkAPI.rejectWithValue(errorMessage);
+      return thunkAPI.rejectWithValue(errorMessage);
     }
   }
 );

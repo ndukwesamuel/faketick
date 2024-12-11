@@ -6,6 +6,7 @@ import ChoosePlans from "../screens/plans/choosePlans";
 import ChoosePricePlans from "../screens/plans/choosePricePlan";
 import ChoosePlanCalender from "../screens/plans/choosePlanCalender";
 import CategoriesPage from "../screens/category/categoriesPage";
+import ImagePreviewScreen from "../screens/TicketingScreen/ImagePreviewScreen";
 const Stack = createNativeStackNavigator();
 
 export default function UserNavigation() {
@@ -20,6 +21,7 @@ export default function UserNavigation() {
       <Stack.Screen name="ChoosePricePlan" component={ChoosePricePlans} />
       <Stack.Screen name="ChoosePlanCalender" component={ChoosePlanCalender} />
       <Stack.Screen name="Categories" component={CategoriesPage} />
+      <Stack.Screen name="ImagePreview" component={ImagePreviewScreen} />
     </Stack.Navigator>
   );
 }

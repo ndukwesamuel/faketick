@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Pressable, Image, Text, View } from "react-native";
-
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export const ReusableBackButton = ({
   onPress,
   style = {},
@@ -21,6 +21,7 @@ export const ReusableBackButton = ({
       }}
       onPress={() => navigation.goBack()}
     >
+      <MaterialIcons name="arrow-back-ios" size={24} color="black" />
       <Image source={require("../../assets/Foodmart/backArrow.png")} />
     </Pressable>
   );
