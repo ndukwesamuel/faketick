@@ -7,12 +7,14 @@ import ChoosePricePlans from "../screens/plans/choosePricePlan";
 import ChoosePlanCalender from "../screens/plans/choosePlanCalender";
 import CategoriesPage from "../screens/category/categoriesPage";
 import ImagePreviewScreen from "../screens/TicketingScreen/ImagePreviewScreen";
+import CardPaymentPage from "../screens/TicketingScreen/cardPaymentPage";
+import DownloadFilesPage from "../screens/TicketingScreen/downloadFilesPage";
 const Stack = createNativeStackNavigator();
 
 export default function UserNavigation() {
   return (
     <Stack.Navigator
-      initialRouteName="Categories"
+      initialRouteName="DownloadFile"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Home" component={TicketingScreen} />
@@ -22,6 +24,8 @@ export default function UserNavigation() {
       <Stack.Screen name="ChoosePlanCalender" component={ChoosePlanCalender} />
       <Stack.Screen name="Categories" component={CategoriesPage} />
       <Stack.Screen name="ImagePreview" component={ImagePreviewScreen} />
+      <Stack.Screen name="cardPayment" component={CardPaymentPage} />
+      <Stack.Screen name="DownloadFile" component={DownloadFilesPage} />
     </Stack.Navigator>
   );
 }
