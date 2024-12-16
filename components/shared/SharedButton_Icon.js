@@ -21,7 +21,7 @@ export const ReusableBackButton = ({
         ...style, // Extend the default style with custom styles
       }}
       onPress={() => {
-        console.log("sjkdsdk");
+        navigation.goBack();
       }}
     >
       <MaterialIcons name="arrow-back-ios" size={30} color="white" />
