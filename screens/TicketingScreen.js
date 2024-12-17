@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import * as ImagePicker from "expo-image-picker"; // Import ImagePicker
 import AppScreen from "../components/shared/AppScreen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { Category_Fun } from "../Redux/Ticket/UploadSlice";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -39,6 +41,16 @@ const TicketingScreen = ({}) => {
       navigation.navigate("ImagePreview", { imageUri: result.assets[0].uri });
     }
   };
+
+  const dispatch = useDispatch();
+  const sOnboarding = useSelector((state) => state.UploadSlice);
+
+  useEffect(() => {
+    dispatch(Category_Fun());
+
+    return () => {};
+  }, []);
+
   return (
     <AppScreen>
       <ScrollView style={styles.container}>

@@ -110,14 +110,25 @@ export default function SignUp({ navigation, onSetAuth }) {
         console.log({
           fire: error?.response?.data,
           afire: error?.response?.data[0].constraints,
+        });
 
-          // ddd: error?.response?.data,
-          // ddd: error?.response?.data?.errors,
-        });
-        Toast.show({
-          type: "error",
-          text1: `${error?.response?.data}`,
-        });
+        const constraints = error?.response?.data[0]?.constraints;
+
+        if (constraints) {
+          const errorKeys = Object.keys(constraints);
+
+          errorKeys.forEach((key) => {
+            Toast.show({
+              type: "error",
+              text1: constraints[key], // Display the constraint message
+            });
+          });
+        } else {
+          Toast.show({
+            type: "error",
+            text1: error?.response?.data || "An unexpected error occurred.",
+          });
+        }
       },
     }
   );

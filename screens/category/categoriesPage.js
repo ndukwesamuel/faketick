@@ -1,143 +1,4 @@
-// import React from "react";
-// import { SafeAreaView, View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-// import BackButton from "../../components/Ticketcomponent/BackButton";
-// import HeaderTitle from "../../components/Ticketcomponent/HeaderTitle";
-// import planeIcon from '../../assets/airplane.png';
-// import BackgroundDefaultStyle from "../../components/Ticketcomponent/BackgroundDefaultStyle";
-
-// const CategoriesPage = () => {
-//         return (
-//               <BackgroundDefaultStyle>
-//                 <BackButton />
-//                 <HeaderTitle Title={"Select Category"} />
-//                 <View>
-//                   <View style={styles.categoryContainer}>
-//                     <TouchableOpacity
-//                       style={styles.categoryCard({
-//                         backgroundColor: "#64CDDB",
-//                       })}
-//                     >
-//                       <Image
-//                         source={planeIcon}
-//                         resizeMode="contain"
-//                         style={styles.categoryCardIcon({
-//                           height: 60,
-//                           width: 60,
-//                         })}
-//                       />
-//                       <Text style={styles.categoryCardDescription}>
-//                         Work travel exp
-//                       </Text>
-//                     </TouchableOpacity>
-//                     <TouchableOpacity
-//                       style={styles.categoryCard({
-//                         backgroundColor: "#596174",
-//                       })}
-//                     >
-//                       <Image
-//                         source={planeIcon}
-//                         resizeMode="contain"
-//                         style={styles.categoryCardIcon({
-//                           height: 60,
-//                           width: 60,
-//                         })}
-//                       />
-//                       <Text style={styles.categoryCardDescription}>
-//                         Work related education
-//                       </Text>
-//                     </TouchableOpacity>
-//                   </View>
-//                   <View style={styles.categoryContainer}>
-//                     <TouchableOpacity
-//                       style={styles.categoryCard({
-//                         backgroundColor: "#F7D794",
-//                       })}
-//                     >
-//                       <Image
-//                         source={planeIcon}
-//                         resizeMode="contain"
-//                         style={styles.categoryCardIcon({
-//                           height: 60,
-//                           width: 60,
-//                         })}
-//                       />
-//                       <Text style={styles.categoryCardDescription}>
-//                         Work clothing
-//                       </Text>
-//                     </TouchableOpacity>
-//                     <TouchableOpacity
-//                       style={styles.categoryCard({
-//                         backgroundColor: "#F8A5C2",
-//                       })}
-//                     >
-//                       <Image
-//                         source={planeIcon}
-//                         resizeMode="contain"
-//                         style={styles.categoryCardIcon({
-//                           height: 60,
-//                           width: 60,
-//                         })}
-//                       />
-//                       <Text style={styles.categoryCardDescription}>
-//                         Other work related epx
-//                       </Text>
-//                     </TouchableOpacity>
-//                   </View>
-//                   <View style={styles.categoryContainer}>
-//                     <TouchableOpacity
-//                       style={styles.categoryCard({
-//                         backgroundColor: "#E77F67",
-//                       })}
-//                     >
-//                       <Image
-//                         source={planeIcon}
-//                         resizeMode="contain"
-//                         style={styles.categoryCardIcon({
-//                           height: 60,
-//                           width: 60,
-//                         })}
-//                       />
-//                       <Text style={styles.categoryCardDescription}>
-//                         Gifts and donations
-//                       </Text>
-//                     </TouchableOpacity>
-//                   </View>
-//                 </View>
-//               </BackgroundDefaultStyle>
-//         );
-// }
-
-// const styles = StyleSheet.create({
-//     headerTitle: {
-//         color: '#fff',
-//         fontSize: 22,
-//         fontWeight: '700',
-//         marginVertical: 40
-//     },
-//     categoryContainer: {
-//         flexDirection: 'row'
-//     },
-//     categoryCard: (data) => ({
-//         backgroundColor: data.backgroundColor,
-//         height: 170,
-//         width: '45%',
-//         marginHorizontal: 8,
-//         borderRadius: 20,
-//         padding: 20,
-//         marginVertical: 10
-//     }),
-//     categoryCardIcon: (data) => ({
-//         height: data.height,
-//         width: data.width,
-//         marginHorizontal: 35,
-//         marginVertical: 20
-//     }),
-//     categoryCardDescription: {
-//         color: '#fff',
-//         textAlign: 'center',
-//         fontSize: 15
-//     }
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -145,162 +6,181 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
+  ActivityIndicator,
 } from "react-native";
-import backArrowIcon from "../../assets/left-arrow.png";
+import BackButton from "../../components/Ticketcomponent/BackButton";
+import HeaderTitle from "../../components/Ticketcomponent/HeaderTitle";
 import planeIcon from "../../assets/airplane.png";
-import { ReusableBackButton } from "../../components/shared/SharedButton_Icon";
-import { useDispatch, useSelector } from "react-redux";
-import { Category_Fun } from "../../Redux/Ticket/UploadSlice";
+import BackgroundDefaultStyle from "../../components/Ticketcomponent/BackgroundDefaultStyle";
+import { useSelector } from "react-redux";
+import { useMutation } from "react-query";
+import Toast from "react-native-toast-message";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
+import DownloadSuccefull from "../TicketingScreen/DownloadSuccefull";
+const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
 
-const CategoriesPage = () => {
-  const dispatch = useDispatch();
-  const sOnboarding = useSelector((state) => state.UploadSlice);
+const categories = [
+  {
+    id: "1",
+    title: "Work travel exp",
+    backgroundColor: "#64CDDB",
+    icon: planeIcon,
+  },
+  {
+    id: "2",
+    title: "Work related education",
+    backgroundColor: "#596174",
+    icon: planeIcon,
+  },
+  {
+    id: "3",
+    title: "Work clothing",
+    backgroundColor: "#F7D794",
+    icon: planeIcon,
+  },
+  {
+    id: "4",
+    title: "Other work related exp",
+    backgroundColor: "#F8A5C2",
+    icon: planeIcon,
+  },
+  {
+    id: "5",
+    title: "Gifts and donations",
+    backgroundColor: "#E77F67",
+    icon: planeIcon,
+  },
+];
+
+const CategoriesPage = ({ route }) => {
+  const { category_data } = useSelector((state) => state.UploadSlice);
+  const navigation = useNavigation();
+
+  const [success_upload, setsuccess_upload] = useState(false);
+
+  const { user_isLoading, user_data, user_message } = useSelector(
+    (state) => state?.Auth
+  );
+  const { imageUri } = route.params; // Access the passed data
+
+  const Upload_Mutation = useMutation(
+    (data_info) => {
+      let url = `${API_BASEURL}upload`;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          //   "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${user_data?.token}`,
+        },
+      };
+
+      return axios.post(url, data_info, config);
+    },
+    {
+      onSuccess: (success) => {
+        console.log({
+          emeka: success,
+        });
+        Toast.show({
+          type: "success",
+          text1: `${success?.data?.message} `,
+        });
+      },
+
+      onError: (error) => {
+        // console.log({
+        //   error: error?.response?.data,
+        // });
+        navigation.navigate("DownloadFile");
+
+        Toast.show({
+          type: "error",
+          text1: `${error?.response?.data?.error} `,
+          //   text2: ` ${error?.response?.data?.errorMsg} `,
+        });
+      },
+    }
+  );
+
+  const handlesub = () => {
+    let data = {
+      category: "674b63bf4d75b8ecbdada16c",
+      file: [`${imageUri}`],
+    };
+    console.log({
+      kkdkd: data,
+    });
+    // navigation.navigate("DownloadFile");
+
+    Upload_Mutation.mutate(data);
+  };
 
   console.log({
-    kkk: sOnboarding,
+    oo: category_data,
   });
 
-  useEffect(() => {
-    dispatch(Category_Fun());
-
-    return () => {};
-  }, []);
+  const renderCategory = ({ item }) => (
+    <TouchableOpacity
+      style={[styles.categoryCard, { backgroundColor: item.backgroundColor }]}
+      onPress={handlesub}
+    >
+      <Image
+        source={item.icon}
+        resizeMode="contain"
+        style={styles.categoryCardIcon}
+      />
+      <Text style={styles.categoryCardDescription}>{item.title}</Text>
+    </TouchableOpacity>
+  );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <ReusableBackButton
-          style={{
-            height: 40,
-            width: 40,
-            position: "absolute",
-            top: 30,
-            left: 20,
-          }}
-        />
+    <>
+      {success_upload ? (
+        <DownloadSuccefull />
+      ) : (
+        <BackgroundDefaultStyle>
+          <BackButton />
+          <HeaderTitle Title={"Select Category"} />
 
-        <Text style={styles.headerTitle}>Select Category </Text>
-        <View>
-          <View style={styles.categoryContainer}>
-            <TouchableOpacity
-              style={styles.categoryCard({ backgroundColor: "#64CDDB" })}
-            >
-              <Image
-                source={planeIcon}
-                resizeMode="contain"
-                style={styles.categoryCardIcon({
-                  height: 60,
-                  width: 60,
-                })}
-              />
-              <Text style={styles.categoryCardDescription}>
-                Work travel exp
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.categoryCard({ backgroundColor: "#596174" })}
-            >
-              <Image
-                source={planeIcon}
-                resizeMode="contain"
-                style={styles.categoryCardIcon({
-                  height: 60,
-                  width: 60,
-                })}
-              />
-              <Text style={styles.categoryCardDescription}>
-                Work related education
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.categoryContainer}>
-            <TouchableOpacity
-              style={styles.categoryCard({ backgroundColor: "#F7D794" })}
-            >
-              <Image
-                source={planeIcon}
-                resizeMode="contain"
-                style={styles.categoryCardIcon({
-                  height: 60,
-                  width: 60,
-                })}
-              />
-              <Text style={styles.categoryCardDescription}>Work clothing</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.categoryCard({ backgroundColor: "#F8A5C2" })}
-            >
-              <Image
-                source={planeIcon}
-                resizeMode="contain"
-                style={styles.categoryCardIcon({
-                  height: 60,
-                  width: 60,
-                })}
-              />
-              <Text style={styles.categoryCardDescription}>
-                Other work related epx
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.categoryContainer}>
-            <TouchableOpacity
-              style={styles.categoryCard({ backgroundColor: "#E77F67" })}
-            >
-              <Image
-                source={planeIcon}
-                resizeMode="contain"
-                style={styles.categoryCardIcon({
-                  height: 60,
-                  width: 60,
-                })}
-              />
-              <Text style={styles.categoryCardDescription}>
-                Gifts and donations
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </SafeAreaView>
+          {Upload_Mutation.isLoading && (
+            <ActivityIndicator color="white" size="large" />
+          )}
+          <FlatList
+            data={categories}
+            renderItem={renderCategory}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            contentContainerStyle={styles.flatListContainer}
+          />
+        </BackgroundDefaultStyle>
+      )}
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#141414",
-    height: "100%",
-    paddingVertical: 40,
-    paddingHorizontal: 20,
+  flatListContainer: {
+    paddingHorizontal: 8,
   },
-  backArrowIconStyle: {
-    height: 40,
-    width: 40,
-  },
-  headerTitle: {
-    color: "#fff",
-    fontSize: 22,
-    fontWeight: "700",
-    marginVertical: 40,
-  },
-  categoryContainer: {
-    flexDirection: "row",
-  },
-  categoryCard: (data) => ({
-    backgroundColor: data.backgroundColor,
+  categoryCard: {
     height: 170,
     width: "45%",
     marginHorizontal: 8,
     borderRadius: 20,
     padding: 20,
     marginVertical: 10,
-  }),
-  categoryCardIcon: (data) => ({
-    height: data.height,
-    width: data.width,
-    marginHorizontal: 35,
-    marginVertical: 20,
-  }),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  categoryCardIcon: {
+    height: 60,
+    width: 60,
+    marginBottom: 10,
+  },
   categoryCardDescription: {
     color: "#fff",
     textAlign: "center",
