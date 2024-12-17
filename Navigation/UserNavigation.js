@@ -9,6 +9,7 @@ import CategoriesPage from "../screens/category/categoriesPage";
 import ImagePreviewScreen from "../screens/TicketingScreen/ImagePreviewScreen";
 import CardPaymentPage from "../screens/TicketingScreen/cardPaymentPage";
 import DownloadFilesPage from "../screens/TicketingScreen/downloadFilesPage";
+import TakingPictureScreen from "../screens/TicketingScreen/takingPictureScreen";
 const Stack = createNativeStackNavigator();
 
 export default function UserNavigation() {
@@ -26,6 +27,7 @@ export default function UserNavigation() {
       <Stack.Screen name="ImagePreview" component={ImagePreviewScreen} />
       <Stack.Screen name="cardPayment" component={CardPaymentPage} />
       <Stack.Screen name="DownloadFile" component={DownloadFilesPage} />
+      <Stack.Screen name="takingPicture" component={TakingPictureScreen}/>
     </Stack.Navigator>
   );
 }

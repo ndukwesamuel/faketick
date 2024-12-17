@@ -133,12 +133,13 @@ const TicketingScreen = ({}) => {
                 }}
               >
                 {/* Take a Picture */}
-                <View
+                <TouchableOpacity
                   style={{
                     alignItems: "center",
                     flex: 1,
                     marginRight: 10,
                   }}
+                  onPress={() => navigation.navigate("takingPicture")}
                 >
                   <Image
                     source={require("../assets/ticket/Group 227.png")}
@@ -157,7 +158,7 @@ const TicketingScreen = ({}) => {
                   >
                     Take a picture
                   </Text>
-                </View>
+                </TouchableOpacity>
 
                 {/* Upload */}
                 <TouchableOpacity
