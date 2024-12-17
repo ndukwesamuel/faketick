@@ -13,6 +13,12 @@ const initialState = {
   category_isSuccess: false,
   category_isLoading: false,
   category_message: null,
+
+  upload_data: null,
+  upload_data_isError: false,
+  upload_data_isSuccess: false,
+  upload_data_isLoading: false,
+  upload_data_message: null,
 };
 
 export const Category_Fun = createAsyncThunk(
@@ -30,6 +36,33 @@ export const Category_Fun = createAsyncThunk(
       };
 
       const response = await axios.get(`${API_BASEURL}category`, config);
+      //   console.log({
+      //     ooo: response.data,
+      //   });
+      return response.data;
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const Get_All_Uplaod_Fun = createAsyncThunk(
+  "UploadSlice/Get_All_Uplaod_Fun",
+  async (_, thunkAPI) => {
+    try {
+      let token = thunkAPI.getState()?.Auth?.user_data?.token;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.get(`${API_BASEURL}uploads`, config);
       console.log({
         ooo: response.data,
       });
@@ -85,6 +118,23 @@ export const UploadSlice = createSlice({
         state.category_isError = true;
         state.category_message = action.payload;
         state.category_data = null;
+      })
+      .addCase(Get_All_Uplaod_Fun.pending, (state) => {
+        state.upload_data_isLoading = true;
+      })
+      .addCase(Get_All_Uplaod_Fun.fulfilled, (state, action) => {
+        state.upload_data_isLoading = false;
+        state.upload_data_isSuccess = true;
+        state.upload_data_isError = false;
+        state.upload_data = action.payload;
+        state.upload_data_message = null;
+      })
+      .addCase(Get_All_Uplaod_Fun.rejected, (state, action) => {
+        state.upload_data_isLoading = false;
+        state.upload_data_isSuccess = false;
+        state.upload_data_isError = true;
+        state.upload_data_message = action.payload;
+        state.upload_data = null;
       });
   },
 });

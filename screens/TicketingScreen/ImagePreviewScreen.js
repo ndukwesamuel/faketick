@@ -15,17 +15,14 @@ import { CustomTextArea, Forminput } from "../../components/shared/InputForm";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
 import { ReusableBackButton } from "../../components/shared/Reuseablecomponent";
+import backArrowIcon from "../../assets/left-arrow.png";
 
 const ImagePreviewScreen = ({ route }) => {
   const { imageUri } = route.params; // Get the image URI passed as a parameter
   const [comment, setComment] = useState("");
   const navigation = useNavigation();
   const handleSubmit = () => {
-    // Handle comment submission logic here
-    console.log("Image URI:", imageUri);
-    console.log("Comment:", comment);
-    alert("Comment added!");
-    navigation.navigate("Categories");
+    navigation.navigate("Categories", { imageUri });
   };
 
   return (
@@ -37,7 +34,7 @@ const ImagePreviewScreen = ({ route }) => {
         }}
         resizeMode="stretch"
       >
-        <ReusableBackButton
+        {/* <ReusableBackButton
           style={{
             height: 40,
             width: 40,
@@ -45,7 +42,40 @@ const ImagePreviewScreen = ({ route }) => {
             top: 30,
             left: 20,
           }}
-        />
+        /> */}
+
+        <TouchableOpacity
+          onPress={
+            () => {
+              navigation.navigate("Home");
+              console.log({
+                ksksks: "dnksddkj",
+              });
+            }
+            // ;
+          }
+          style={{
+            zIndex: 20,
+          }}
+        >
+          <Image
+            source={backArrowIcon}
+            resizeMode="contain"
+            // style={styles.backArrowIconStyle}
+            style={{
+              height: 40,
+              width: 40,
+              position: "absolute",
+              top: 30,
+              left: 20,
+              zIndex: 100,
+              // position: "absolute",
+              // marginTop: 40,
+              // paddingHorizontal: 10,
+              // ...style, // Extend the default style with custom styles
+            }}
+          />
+        </TouchableOpacity>
 
         <View
           style={{

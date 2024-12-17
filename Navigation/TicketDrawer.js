@@ -94,11 +94,11 @@ export default function TicketDrawer() {
         component={UserNavigation}
       />
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         options={{ drawerLabel: "Image" }}
         name="image_preview"
         component={ImagePreviewScreen}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 }

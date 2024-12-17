@@ -27,11 +27,17 @@ import OtpScreen from "./screens/OtpScreen";
 
 import UserNavigation from "./Navigation/UserNavigation";
 import Security from "./components/Auth/Security";
-import { UserProfile_Fun, reset_login } from "./Redux/AuthSlice";
+import {
+  Subscription_Fun,
+  UserProfile_Fun,
+  reset_login,
+} from "./Redux/AuthSlice";
 import Login from "./screens/Login";
 import TicketDrawer from "./Navigation/TicketDrawer";
+import Subcription from "./screens/TicketingScreen/Subcription";
 
 const queryClient = new QueryClient();
+const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
 
 const Stack = createNativeStackNavigator();
 const screenOptions = {
@@ -58,6 +64,7 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
+  console.log(API_BASEURL);
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
@@ -108,11 +115,6 @@ export const NavigationScreen = () => {
 
   return (
     <NavigationContainer>
-      {/* <Login /> */}
-      {/* <StartScreen /> */}
-      {/* {user_data?.data?.token && <MainScreen />}
-      {!user_data?.data?.token && <StartScreen />} */}
-      {/* <MainScreen /> */}
       {user_data?.token && <MainScreen />}
       {!user_data?.token && <StartScreen />}
       <Toast />
@@ -121,21 +123,19 @@ export const NavigationScreen = () => {
 };
 
 const MainScreen = () => {
-  // const { user_data, user_isLoading, user_profile_data } = useSelector(
-  //   (state) => state?.Auth
-  // );
+  const { user_data, user_isLoading, user_profile_data, subscription_data } =
+    useSelector((state) => state?.Auth);
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // console.log({
-  //   kk: user_profile_data?.data?.has_default_address,
-  // });
+  // dispatch(reset_login());
 
-  // useEffect(() => {
-  //   dispatch(UserProfile_Fun());
+  useEffect(() => {
+    dispatch(Subscription_Fun());
+    dispatch(UserProfile_Fun());
 
-  //   return () => {};
-  // }, []);
+    return () => {};
+  }, []);
 
   // const isRegistered =
   //   user_profile_data?.data?.has_filled_security_question !== false;
@@ -157,17 +157,16 @@ const MainScreen = () => {
   //   );
   // }
 
-  return <TicketDrawer />;
-};
+  const [subscription, setsubscription] = useState(false);
+  const changesubscriptionType = (type) => {
+    setsubscription(type);
+  };
+  if (user_data?.subscription) {
+    return <TicketDrawer />;
+  } else {
+    return <Subcription onsetdata={changesubscriptionType} />;
+  }
+  // let screen =
 
-const BeforeLOginScreen = () => {
-  const { user_data, user_isLoading } = useSelector((state) => state?.Auth);
-
-  const dispatch = useDispatch();
-
-  console.log({
-    kk: user_data?.data?.user,
-  });
-
-  return <Text> kaka</Text>;
+  // return <> {subscription ? <TicketDrawer /> : <Subcription />} </>;
 };

@@ -43,13 +43,6 @@ const Landing = ({ onSetAuth }) => {
     <AppScreen>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-          {/* <FontAwesome name="navicon" size={24} color="white" /> */}
-          <TouchableOpacity
-            onPress={() => navigation.toggleDrawer()}
-            // style={{ position: "absolute", top: 80, left: 30, zIndex: 1 }}
-          >
-            <FontAwesome name="navicon" size={24} color="white" />
-          </TouchableOpacity>
           <View
             style={{
               flex: 1,
@@ -129,7 +122,7 @@ const Landing = ({ onSetAuth }) => {
                       fontWeight: "700",
                     }}
                   >
-                    New
+                    New User
                   </Text>
                 </TouchableOpacity>
 
@@ -158,7 +151,7 @@ const Landing = ({ onSetAuth }) => {
                       fontWeight: "700",
                     }}
                   >
-                    Registered
+                    Registered User
                   </Text>
                 </TouchableOpacity>
               </View>
