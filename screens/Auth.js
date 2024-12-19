@@ -8,17 +8,19 @@ import SignUp from "./SignUp";
 import OtpScreen from "./OtpScreen";
 import ForgetPassowrd from "../components/Auth/ForgetPassowrd";
 import VerificationScreen from "./OtpScreen";
+// import Home from "./Home"; // Import the Home component
 import { useDispatch, useSelector } from "react-redux";
 import { reset_login } from "../Redux/AuthSlice";
+import Landing from "../components/Ticketcomponent/Landing";
 
 const Auth = () => {
-  // const [start, setStart] = useState(false);
-  const [authType, setAuthtype] = useState("sign-up");
+  const [authType, setAuthtype] = useState("home");
   const dispatch = useDispatch();
 
   const changeAuthType = (type) => {
     setAuthtype(type);
   };
+
   const { user_message } = useSelector((state) => state.Auth);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const Auth = () => {
       dispatch(reset_login());
     }
     return () => {};
-  }, []);
+  }, [user_message]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -39,6 +41,8 @@ const Auth = () => {
         <SignUp onSetAuth={changeAuthType} />
       ) : authType === "sign-in" ? (
         <Login onSetAuth={changeAuthType} />
+      ) : authType === "home" ? (
+        <Landing onSetAuth={changeAuthType} />
       ) : authType === "verify" ? (
         <VerificationScreen onSetAuth={changeAuthType} />
       ) : (

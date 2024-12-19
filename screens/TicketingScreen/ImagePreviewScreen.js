@@ -10,21 +10,23 @@ import {
   ImageBackground,
   Pressable,
 } from "react-native";
-import { ReusableBackButton } from "../../components/shared/SharedButton_Icon";
 import AppScreen from "../../components/shared/AppScreen";
-import { CustomTextArea } from "../../components/shared/InputForm";
+import { CustomTextArea, Forminput } from "../../components/shared/InputForm";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useNavigation } from "@react-navigation/native";
+import { ReusableBackButton } from "../../components/shared/Reuseablecomponent";
+import backArrowIcon from "../../assets/left-arrow.png";
 
-const ImagePreviewScreen = ({ route, navigation }) => {
+const ImagePreviewScreen = ({ route }) => {
   const { imageUri } = route.params; // Get the image URI passed as a parameter
   const [comment, setComment] = useState("");
-
+  const navigation = useNavigation();
+  let image_data = {
+    comment,
+    imageUri,
+  };
   const handleSubmit = () => {
-    // Handle comment submission logic here
-    console.log("Image URI:", imageUri);
-    console.log("Comment:", comment);
-    alert("Comment added!");
-    navigation.goBack();
+    navigation.navigate("Categories", { image_data });
   };
 
   return (
@@ -36,9 +38,38 @@ const ImagePreviewScreen = ({ route, navigation }) => {
         }}
         resizeMode="stretch"
       >
-        <ReusableBackButton
-          style={{ position: "absolute", left: 10, top: 20 }}
-        />
+        <TouchableOpacity
+          onPress={
+            () => {
+              navigation.navigate("Home");
+              console.log({
+                ksksks: "dnksddkj",
+              });
+            }
+            // ;
+          }
+          style={{
+            zIndex: 20,
+          }}
+        >
+          <Image
+            source={backArrowIcon}
+            resizeMode="contain"
+            // style={styles.backArrowIconStyle}
+            style={{
+              height: 40,
+              width: 40,
+              position: "absolute",
+              top: 30,
+              left: 20,
+              zIndex: 100,
+              // position: "absolute",
+              // marginTop: 40,
+              // paddingHorizontal: 10,
+              // ...style, // Extend the default style with custom styles
+            }}
+          />
+        </TouchableOpacity>
 
         <View
           style={{
@@ -56,15 +87,14 @@ const ImagePreviewScreen = ({ route, navigation }) => {
               marginBottom: 20,
             }}
           >
-            Description (Optional)
+            Image Name
           </Text>
 
-          <CustomTextArea
-            placeholder="Enter text here..."
-            value={comment}
+          <Forminput
+            placeholder="Business Name"
             onChangeText={setComment}
-            style={{ width: "80%" }}
-            inputStyle={{
+            value={comment}
+            style={{
               textAlignVertical: "top", // Ensures text starts from the top
               paddingTop: 10, // Add paddingTop to control vertical padding
               paddingBottom: 10, // Add paddingBottom to balance padding
@@ -72,7 +102,7 @@ const ImagePreviewScreen = ({ route, navigation }) => {
               paddingHorizontal: 10,
               paddingTop: 10, // Add paddingTop to control the vertical padding
               paddingBottom: 10, // Add paddingBottom to balance the padding
-              height: 200,
+              height: 50,
               borderRadius: 6,
               fontSize: 16,
               color: "white",
@@ -100,7 +130,6 @@ const ImagePreviewScreen = ({ route, navigation }) => {
             Save category
           </Text>
         </TouchableOpacity>
-        <Button title="back" onPress={() => navigation.goBack()} />
       </ImageBackground>
     </AppScreen>
   );

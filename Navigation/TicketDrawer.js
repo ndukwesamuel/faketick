@@ -94,11 +94,11 @@ export default function TicketDrawer() {
         component={UserNavigation}
       />
 
-      <Drawer.Screen
+      {/* <Drawer.Screen
         options={{ drawerLabel: "Image" }}
         name="image_preview"
         component={ImagePreviewScreen}
-      />
+      /> */}
     </Drawer.Navigator>
   );
 }
@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     // borderTopWidth: 1,
     borderTopColor: "gray",
     padding: 10,
-    top: "100%",
-    position: "relative",
+    // top: "70%",
+    // position: "absolute",
   },
   settingsLabel: {
     flexDirection: "row",

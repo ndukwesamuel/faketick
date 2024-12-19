@@ -1,7 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Pressable, Image, Text, View } from "react-native";
+import { Pressable, Image, Text, View, TouchableOpacity } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import backArrowIcon from "../../assets/left-arrow.png";
+
 export const ReusableBackButton = ({
   onPress,
   style = {},
@@ -11,7 +13,8 @@ export const ReusableBackButton = ({
 }) => {
   const navigation = useNavigation();
   return (
-    <Pressable
+    <>
+      {/* <Pressable
       //   onPress={onPress}
       style={{
         // position: "absolute",
@@ -23,7 +26,22 @@ export const ReusableBackButton = ({
     >
       <MaterialIcons name="arrow-back-ios" size={24} color="black" />
       <Image source={require("../../assets/Foodmart/backArrow.png")} />
-    </Pressable>
+    </Pressable> */}
+
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image
+          source={backArrowIcon}
+          resizeMode="contain"
+          // style={styles.backArrowIconStyle}
+          style={{
+            // position: "absolute",
+            // marginTop: 40,
+            // paddingHorizontal: 10,
+            ...style, // Extend the default style with custom styles
+          }}
+        />
+      </TouchableOpacity>
+    </>
   );
 };
 

@@ -25,6 +25,12 @@ const initialState = {
   user_profile_isSuccess: false,
   user_profile_isLoading: false,
   user_profile_message: null,
+
+  subscription_data: null,
+  subscription_isError: false,
+  subscription_isSuccess: false,
+  subscription_isLoading: false,
+  subscription_message: null,
 };
 
 const Login_Fun_Service = async (data) => {
@@ -50,10 +56,32 @@ export const Login_Fun = createAsyncThunk(
         kaka: error?.response?.data?.error,
       });
       const errorMessage = error?.response?.data?.error;
-      Toast.show({
-        type: "error",
-        text1: `${errorMessage}`,
+      const constraints = error?.response?.data[0]?.constraints;
+
+      console.log({
+        asas: constraints,
       });
+
+      if (constraints) {
+        const errorKeys = Object.keys(constraints);
+
+        errorKeys.forEach((key) => {
+          Toast.show({
+            type: "error",
+            text1: constraints[key], // Display the constraint message
+          });
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1:
+            error?.response?.data?.error || "An unexpected error occurred.",
+        });
+      }
+      // Toast.show({
+      //   type: "error",
+      //   text1: `${errorMessage}`,
+      // });
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
@@ -63,8 +91,9 @@ export const UserProfile_Fun = createAsyncThunk(
   "auth/UserProfile_Fun",
   async (_, thunkAPI) => {
     try {
-      let token = thunkAPI.getState()?.Auth?.user_data?.data?.token;
       // ?.data?.token;
+      let token = thunkAPI.getState()?.Auth?.user_data?.token;
+
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -72,8 +101,45 @@ export const UserProfile_Fun = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(`${API_BASEURL}v1/profile`, config);
+      const response = await axios.get(`${API_BASEURL}user`, config);
+      console.log({
+        iaois: response.data,
+      });
+      return response.data;
+    } catch (error) {
+      console.log({ iiiii: error?.response?.data?.error?.message });
 
+      Toast.show({
+        type: "error",
+        text1: `${error?.response?.data?.error?.message}`,
+      });
+      // const errorMessage = handleApiError(error);
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const Subscription_Fun = createAsyncThunk(
+  "auth/Subscription_Fun",
+  async (_, thunkAPI) => {
+    try {
+      let token = thunkAPI.getState()?.Auth?.user_data?.token;
+      // ?.data?.token;
+
+      console.log({
+        ui: token,
+      });
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.get(`${API_BASEURL}/subscriptions`, config);
+      console.log({
+        gagaga: response.data,
+      });
       return response.data;
     } catch (error) {
       const errorMessage = handleApiError(error);
@@ -108,22 +174,22 @@ export const AuthSlice = createSlice({
         state.user_data = null;
         state.user_isSuccess = false;
       })
-      .addCase(UserProfile_Fun.pending, (state) => {
-        state.user_profile_isLoading = true;
+      .addCase(Subscription_Fun.pending, (state) => {
+        state.subscription_isLoading = true;
       })
-      .addCase(UserProfile_Fun.fulfilled, (state, action) => {
-        state.user_profile_isLoading = false;
-        state.user_profile_isSuccess = true;
-        state.user_profile_isError = false;
-        state.user_profile_message = null;
-        state.user_profile_data = action.payload;
+      .addCase(Subscription_Fun.fulfilled, (state, action) => {
+        state.subscription_isLoading = false;
+        state.subscription_isSuccess = true;
+        state.subscription_isError = false;
+        state.subscription_message = null;
+        state.subscription_data = action.payload;
       })
-      .addCase(UserProfile_Fun.rejected, (state, action) => {
-        state.user_profile_isLoading = false;
-        state.user_profile_isError = true;
-        state.user_profile_message = action.payload;
-        state.user_profile_data = null;
-        state.user_profile_isSuccess = false;
+      .addCase(Subscription_Fun.rejected, (state, action) => {
+        state.subscription_isLoading = false;
+        state.subscription_isError = true;
+        state.subscription_message = action.payload;
+        state.subscription_data = null;
+        state.subscription_isSuccess = false;
       });
   },
 });

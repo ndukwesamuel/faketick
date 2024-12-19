@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,8 @@ import * as ImagePicker from "expo-image-picker"; // Import ImagePicker
 import AppScreen from "../components/shared/AppScreen";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { Category_Fun } from "../Redux/Ticket/UploadSlice";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -39,6 +41,71 @@ const TicketingScreen = ({}) => {
       navigation.navigate("ImagePreview", { imageUri: result.assets[0].uri });
     }
   };
+
+  const handleTakePicture = async () => {
+    // Request permissions to access the camera
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access the camera is required!");
+      return;
+    }
+
+    // Open the camera
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true, // Optional: Allow cropping
+      aspect: [4, 3], // Aspect ratio for editing
+      quality: 1, // Set image quality
+    });
+
+    if (!result.canceled) {
+      // Navigate to the next screen with the captured image
+      navigation.navigate("ImagePreview", { imageUri: result.assets[0].uri });
+    }
+  };
+
+  const dispatch = useDispatch();
+  const sOnboarding = useSelector((state) => state.UploadSlice);
+
+  useEffect(() => {
+    dispatch(Category_Fun());
+
+    return () => {};
+  }, []);
+
+  const today = new Date();
+
+  // Format date components
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const dayOfWeek = days[today.getDay()]; // Day name
+  const day = today.getDate(); // Day of the month
+  const month = months[today.getMonth()]; // Month name
+  const year = today.getFullYear(); // Year
+
+  const formattedDate = `${dayOfWeek}, ${day} ${month} ${year}`;
+
   return (
     <AppScreen>
       <ScrollView style={styles.container}>
@@ -77,7 +144,8 @@ const TicketingScreen = ({}) => {
                   marginTop: 4,
                 }}
               >
-                Today is Tuesday 30 DEC 2025
+                {formattedDate}
+                {/* Today is Tuesday 30 DEC 2025 */}
               </Text>
             </View>
 
@@ -87,8 +155,9 @@ const TicketingScreen = ({}) => {
                 backgroundColor: "#fff",
                 borderRadius: 12,
                 padding: 20,
+                paddingBottom: 40,
                 marginTop: 50,
-                height: screenHeight * 0.5, // Set height to 70% of the screen height
+                height: screenHeight * 0.55, // Set height to 70% of the screen height
                 // borderWidth: 10,
                 // borderColor: "white",
               }}
@@ -133,7 +202,7 @@ const TicketingScreen = ({}) => {
                 }}
               >
                 {/* Take a Picture */}
-                <View
+                {/* <View
                   style={{
                     alignItems: "center",
                     flex: 1,
@@ -148,6 +217,35 @@ const TicketingScreen = ({}) => {
                       borderRadius: 8,
                     }}
                   />
+                  <Text
+                    style={{
+                      marginTop: 8,
+                      fontSize: 14,
+                      color: "#000",
+                    }}
+                  >
+                    Take a picture
+                  </Text>
+                </View> */}
+
+                {/* Take a Picture */}
+                <View
+                  style={{
+                    alignItems: "center",
+                    flex: 1,
+                    marginRight: 10,
+                  }}
+                >
+                  <TouchableOpacity onPress={handleTakePicture}>
+                    <Image
+                      source={require("../assets/ticket/Group 227.png")}
+                      style={{
+                        width: 150,
+                        height: 150,
+                        borderRadius: 8,
+                      }}
+                    />
+                  </TouchableOpacity>
                   <Text
                     style={{
                       marginTop: 8,
