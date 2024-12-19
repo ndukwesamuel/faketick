@@ -95,6 +95,7 @@ export default function TicketDrawer() {
         headerShown: false,
         drawerStyle: {
           backgroundColor: "#000", // Set drawer background color to black
+          width: "50%",
         },
         drawerLabelStyle: {
           color: "white", // Set drawer text color to white
