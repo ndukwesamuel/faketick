@@ -99,6 +99,8 @@ const CategoriesPage = ({ route }) => {
           type: "success",
           text1: `File Uploaded Successfull`,
         });
+
+        navigation.navigate("DownloadFile");
       },
 
       onError: (error) => {
@@ -145,19 +147,6 @@ const CategoriesPage = ({ route }) => {
       },
     }
   );
-
-  // const handlesub = () => {
-  //   let data = {
-  //     category: "674b63bf4d75b8ecbdada16c",
-  //     file: [`${imageUri}`],
-  //   };
-  //   console.log({
-  //     kkdkd: data,
-  //   });
-  //   // navigation.navigate("DownloadFile");
-
-  //   Upload_Mutation.mutate(data);
-  // };
 
   const handlesub = async (item) => {
     console.log({
@@ -210,7 +199,7 @@ const CategoriesPage = ({ route }) => {
 
             type: uploadedImageUrl?.format,
             size: uploadedImageUrl?.bytes,
-            title: "public",
+            title: comment,
           },
         ],
       };

@@ -63,11 +63,12 @@ export const Get_All_Uplaod_Fun = createAsyncThunk(
       };
 
       const response = await axios.get(`${API_BASEURL}uploads`, config);
-      console.log({
-        ooo: response.data,
-      });
+      console.log({ llll: response?.data });
       return response.data;
     } catch (error) {
+      console.log({
+        ddddd: error,
+      });
       const errorMessage = handleApiError(error);
 
       return thunkAPI.rejectWithValue(errorMessage);

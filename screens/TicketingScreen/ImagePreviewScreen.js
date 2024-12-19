@@ -26,7 +26,11 @@ const ImagePreviewScreen = ({ route }) => {
     imageUri,
   };
   const handleSubmit = () => {
-    navigation.navigate("Categories", { image_data });
+    if (comment) {
+      navigation.navigate("Categories", { image_data });
+    } else {
+      alert("Please add an image name.");
+    }
   };
 
   return (

@@ -6,7 +6,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserNavigation from "./UserNavigation";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { reset_login } from "../Redux/AuthSlice";
@@ -18,11 +18,17 @@ function CustomDrawerContent(props) {
   const { navigation } = props;
   const dispatch = useDispatch();
 
+  const { user_data, user_isLoading, user_profile_data, subscription_data } =
+    useSelector((state) => state?.Auth);
+
   const handleLogout = () => {
     // Implement your logout logic here
     dispatch(reset_login());
   };
 
+  console.log({
+    dd: user_data?.subscription,
+  });
   // Dummy user data (replace with real user data from state or props)
   const user = {
     name: "John Doe",
@@ -37,23 +43,32 @@ function CustomDrawerContent(props) {
           source={{ uri: user.profilePicture }}
           style={styles.profileImage}
         />
-        <Text style={styles.profileName}>{user.name}</Text>
+        <Text style={styles.profileName}>
+          {user_data.firstName} {user_data.lastName}
+        </Text>
       </View>
-
-      {/* Drawer Items */}
-      <View style={{ flex: 1 }}>
-        <DrawerItemList
-          {...props}
-          labelStyle={{
-            color: "white", // White text color
-          }}
-        />
-      </View>
-
-      {/* Logout Button */}
 
       {/* Settings Button */}
       <View style={styles.settingsContainer}>
+        <DrawerItem
+          label={() => (
+            <View style={styles.settingsLabel}>
+              <AntDesign name="setting" size={20} color="white" />
+              <Text style={styles.settingsText}>Home</Text>
+            </View>
+          )}
+          onPress={() => navigation.navigate("Home")} // Navigate to the Settings screen
+        />
+
+        <DrawerItem
+          label={() => (
+            <View style={styles.settingsLabel}>
+              <AntDesign name="setting" size={20} color="white" />
+              <Text style={styles.settingsText}>Download</Text>
+            </View>
+          )}
+          onPress={() => navigation.navigate("DownloadFile")} // Navigate to the Settings screen
+        />
         <DrawerItem
           label={() => (
             <View style={styles.settingsLabel}>
