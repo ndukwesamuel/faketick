@@ -240,7 +240,7 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import { reset_login } from "../../Redux/AuthSlice";
 
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
 const PickPlan = ({ onsetdata }) => {
   const navigation = useNavigation();

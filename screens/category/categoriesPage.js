@@ -13,6 +13,10 @@ import BackButton from "../../components/Ticketcomponent/BackButton";
 import HeaderTitle from "../../components/Ticketcomponent/HeaderTitle";
 import planeIcon from "../../assets/ticket/Vector (7).png";
 import education from "../../assets/ticket/Vector (8).png";
+import hanger from "../../assets/ticket/hanger.png";
+import casebox from "../../assets/ticket/case.png";
+
+// hanger.png
 import defaultIcon from "../../assets/ticket/Vector (8).png";
 import BackgroundDefaultStyle from "../../components/Ticketcomponent/BackgroundDefaultStyle";
 import { useSelector } from "react-redux";
@@ -21,7 +25,7 @@ import Toast from "react-native-toast-message";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import DownloadSuccefull from "../TicketingScreen/DownloadSuccefull";
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
 const CategoriesPage = ({ route }) => {
   const { category_data } = useSelector((state) => state.UploadSlice);
@@ -243,8 +247,8 @@ const CategoriesPage = ({ route }) => {
   const categoryMap = {
     "Work travel exp": { icon: planeIcon, color: "#64CDDB" },
     "Work related education": { icon: education, color: "#596174" },
-    "Work clothing": { icon: planeIcon, color: "#F7D794" },
-    "Other work related exp": { icon: planeIcon, color: "#F8A5C2" },
+    "Work Clothing": { icon: hanger, color: "#F7D794" },
+    "Other work related exp": { icon: casebox, color: "#F8A5C2" },
     "Gifts and donations": { icon: planeIcon, color: "#E77F67" },
   };
 

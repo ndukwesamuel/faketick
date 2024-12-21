@@ -4,7 +4,7 @@ import axios from "axios";
 
 import Toast from "react-native-toast-message";
 import { handleApiError } from "../shareApi";
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
 const initialState = {
   category_data: null,

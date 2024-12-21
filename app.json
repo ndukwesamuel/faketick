@@ -32,7 +32,8 @@
         ],
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access camera.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
-      }
+      },
+      "bundleIdentifier": "com.samheart.busapp"
     },
     "android": {
       "versionCode": 10,
@@ -60,7 +61,7 @@
     "jsEngine": "hermes",
     "extra": {
       "eas": {
-        "projectId": "84b59ff0-23a9-4719-a0ad-9bd6d7e3fe95"
+        "projectId": "98ce42ba-c88e-452e-b551-e9a4725356e0"
       }
     }
   }

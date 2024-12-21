@@ -3,9 +3,9 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native";
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+//ticketing-backend-qt14.onrender.com/api/
 
-export const StartTripMutation = (token, item) => {
+https: export const StartTripMutation = (token, item) => {
   const navigation = useNavigation();
   return useMutation(
     (data_info) => {

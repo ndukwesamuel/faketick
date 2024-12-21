@@ -14,6 +14,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { Category_Fun } from "../Redux/Ticket/UploadSlice";
+import { formatDate } from "../utills/DateTime";
 
 const { height: screenHeight } = Dimensions.get("window");
 
@@ -65,7 +66,11 @@ const TicketingScreen = ({}) => {
 
   const dispatch = useDispatch();
   const sOnboarding = useSelector((state) => state.UploadSlice);
+  const { user_data } = useSelector((state) => state.Auth);
 
+  console.log({
+    lkl: formatDate(user_data?.subscription?.period[0]?.exp_date),
+  });
   useEffect(() => {
     dispatch(Category_Fun());
 
@@ -135,7 +140,7 @@ const TicketingScreen = ({}) => {
                   fontWeight: "bold",
                 }}
               >
-                Hello Femi
+                Hello {user_data?.firstName} {user_data?.lastName}
               </Text>
               <Text
                 style={{
@@ -168,7 +173,7 @@ const TicketingScreen = ({}) => {
                   fontWeight: "700",
                 }}
               >
-                $0 /month
+                ${user_data?.subscription?.plan?.price} /month
               </Text>
               <Text
                 style={{
@@ -177,7 +182,7 @@ const TicketingScreen = ({}) => {
                   fontWeight: "700",
                 }}
               >
-                Free trial
+                {user_data?.subscription?.plan?.plan}
               </Text>
               <Text
                 style={{
@@ -187,7 +192,8 @@ const TicketingScreen = ({}) => {
                   fontWeight: "400",
                 }}
               >
-                Your free trial ends on January 23rd 2025
+                Your free trial ends on
+                {`${formatDate(user_data?.subscription?.period[0]?.exp_date)}`}
               </Text>
 
               {/* Options */}
@@ -196,9 +202,6 @@ const TicketingScreen = ({}) => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   marginTop: 80,
-                  // alignItems: "flex-end",
-                  // alignItems:""
-                  // alignSelf: "baseline",
                 }}
               >
                 {/* Take a Picture */}

@@ -15,12 +15,12 @@
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://busapp-server-api.cedumas.com/"
+        "EXPO_PUBLIC_API_URL": "https://ticketing-backend-qt14.onrender.com/api/"
       }
     },
     "test": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://busapp-server-api.cedumas.com/"
+        "EXPO_PUBLIC_API_URL": "https://ticketing-backend-qt14.onrender.com/api/"
       }
     }
   }

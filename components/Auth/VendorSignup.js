@@ -23,7 +23,7 @@ import {
 import { maincolors } from "../../utills/Themes";
 import AppscreenLogo from "../shared/AppscreenLogo";
 
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
 const VendorSignup = ({ onSetAuth }) => {
   const navigation = useNavigation();

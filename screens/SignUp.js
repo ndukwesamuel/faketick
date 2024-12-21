@@ -20,9 +20,9 @@ import { useMutation } from "react-query";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import Checkbox from "expo-checkbox";
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+//ticketing-backend-qt14.onrender.com/api/
 
-console.log({
+https: console.log({
   aaa: API_BASEURL,
 });
 const fetchStates = async () => {

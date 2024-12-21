@@ -19,7 +19,7 @@ import { maincolors } from "../../utills/Themes";
 import AppscreenLogo from "../shared/AppscreenLogo";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
 const SignUp = ({ onSetAuth }) => {
   const navigation = useNavigation();

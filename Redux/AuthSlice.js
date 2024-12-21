@@ -4,9 +4,9 @@ import { handleApiError } from "./shareApi";
 import axios from "axios";
 
 import Toast from "react-native-toast-message";
-const API_BASEURL = process.env.EXPO_PUBLIC_API_URL;
+//ticketing-backend-qt14.onrender.com/api/
 
-console.log({
+https: console.log({
   kdkd: API_BASEURL,
 });
 // import { Alert } from "react-native";
