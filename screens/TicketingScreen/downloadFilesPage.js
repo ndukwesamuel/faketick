@@ -22,6 +22,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { formatDate, formatDateandTime } from "../../utills/DateTime";
 
 const DownloadFilesPage = () => {
   const navigation = useNavigation();
@@ -105,29 +106,36 @@ const DownloadFilesPage = () => {
     return (
       <View>
         {/* <TouchableOpacity style={styles.downloadFileMainContainer}> */}
-        <TouchableOpacity
+        <View
           style={styles.downloadFileMainContainer}
-          onPress={() => handlePress(item?.file[0]?.uri)}
+          // onPress={() => handlePress(item?.file[0]?.uri)}
         >
-          <View>
+          <TouchableOpacity onPress={() => handlePress(item?.file[0]?.uri)}>
             <Text style={styles.downloadFileText(20)}>
               {item?.file[0]?.title}
             </Text>
             <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 20,
+              }}
             >
-              <Text style={styles.downloadFileText(12)}>{item?.date}</Text>
+              <Text style={styles.downloadFileText(12)}>
+                {formatDate(item?.createdAt)}
+              </Text>
               <Text style={styles.downloadFileText(12)}>
                 {bytesToMB(item?.file[0]?.size)}Mb
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
           <Image
             source={downloadIcon}
             resizeMode="contain"
             style={styles.bodyHeaderButtonIcon(30)}
           />
-        </TouchableOpacity>
+        </View>
 
         <Modal
           transparent={true}
@@ -147,10 +155,10 @@ const DownloadFilesPage = () => {
               <TouchableOpacity
                 onPress={closeModal}
                 style={{
-                  backgroundColor: "blue",
+                  backgroundColor: "#005858",
                   borderRadius: 20,
                   padding: 10,
-                  paddingHorizontal: 20,
+                  paddingHorizontal: 40,
                   marginTop: 20,
                 }}
               >
@@ -183,10 +191,29 @@ const DownloadFilesPage = () => {
             />
           </TouchableOpacity>
         </View>
-        <View style={{ paddingHorizontal: 20 }}>
+        {/* <View style={{ paddingHorizontal: 20 }}>
           <FlatList
             data={upload_data?.docs}
             renderItem={(item) => <RenderDownloadFile item={item.item} />}
+          />
+        </View> */}
+
+        <View style={{ paddingHorizontal: 20 }}>
+          <FlatList
+            data={upload_data?.docs}
+            keyExtractor={(item, index) => item._id || index.toString()} // Ensure a unique key for each item
+            renderItem={({ item }) => <RenderDownloadFile item={item} />}
+            showsVerticalScrollIndicator={false} // Optional: hides the scrollbar for cleaner UI
+            contentContainerStyle={{
+              paddingBottom: 20, // Adds padding at the bottom for smoother scrolling
+            }}
+            ListEmptyComponent={
+              <Text
+                style={{ color: "#fff", textAlign: "center", marginTop: 20 }}
+              >
+                No files available for download.
+              </Text>
+            }
           />
         </View>
       </View>
@@ -203,7 +230,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
   },
-  modalContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   modalContent: {
     width: "80%",
     padding: 20,

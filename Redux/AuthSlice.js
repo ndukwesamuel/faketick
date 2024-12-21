@@ -4,7 +4,7 @@ import { handleApiError } from "./shareApi";
 import axios from "axios";
 
 import Toast from "react-native-toast-message";
-//ticketing-backend-qt14.onrender.com/api/
+const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
 https: console.log({
   kdkd: API_BASEURL,
