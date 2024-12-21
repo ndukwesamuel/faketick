@@ -13,6 +13,7 @@ import BackButton from "../../components/Ticketcomponent/BackButton";
 import HeaderTitle from "../../components/Ticketcomponent/HeaderTitle";
 import planeIcon from "../../assets/ticket/Vector (7).png";
 import education from "../../assets/ticket/Vector (8).png";
+import defaultIcon from "../../assets/ticket/Vector (8).png";
 import BackgroundDefaultStyle from "../../components/Ticketcomponent/BackgroundDefaultStyle";
 import { useSelector } from "react-redux";
 import { useMutation } from "react-query";
@@ -231,16 +232,23 @@ const CategoriesPage = ({ route }) => {
     oo: category_data?.docs,
   });
 
+  // const categoryMap = {
+  //   Travel: { icon: planeIcon, color: "#64CDDB" },
+  //   Food: { icon: planeIcon, color: "#F9A826" },
+  //   Shopping: { icon: planeIcon, color: "#FF6347" },
+  //   Sports: { icon: planeIcon, color: "#32CD32" },
+  //   Gists: { icon: education, color: "#6A5ACD" },
+  // };
+
   const categoryMap = {
-    Travel: { icon: planeIcon, color: "#64CDDB" },
-    Food: { icon: planeIcon, color: "#F9A826" },
-    Shopping: { icon: planeIcon, color: "#FF6347" },
-    Sports: { icon: planeIcon, color: "#32CD32" },
-    Gists: { icon: education, color: "#6A5ACD" },
+    "Work travel exp": { icon: planeIcon, color: "#64CDDB" },
+    "Work related education": { icon: education, color: "#596174" },
+    "Work clothing": { icon: planeIcon, color: "#F7D794" },
+    "Other work related exp": { icon: planeIcon, color: "#F8A5C2" },
+    "Gifts and donations": { icon: planeIcon, color: "#E77F67" },
   };
 
   const renderCategory = ({ item }) => {
-    // Get the icon and color based on the item name or use defaults
     const category = categoryMap[item.name] || {
       icon: defaultIcon,
       color: "#CCCCCC",
@@ -261,6 +269,29 @@ const CategoriesPage = ({ route }) => {
       </TouchableOpacity>
     );
   };
+
+  // const renderCategory = ({ item }) => {
+  //   // Get the icon and color based on the item name or use defaults
+  //   const category = categoryMap[item.name] || {
+  //     icon: defaultIcon,
+  //     color: "#CCCCCC",
+  //   };
+  //   const { icon, color } = category;
+
+  //   return (
+  //     <TouchableOpacity
+  //       style={[styles.categoryCard, { backgroundColor: color }]}
+  //       onPress={() => handlesub(item)}
+  //     >
+  //       <Image
+  //         source={icon}
+  //         resizeMode="contain"
+  //         style={styles.categoryCardIcon}
+  //       />
+  //       <Text style={styles.categoryCardDescription}>{item.name}</Text>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   return (
     <>

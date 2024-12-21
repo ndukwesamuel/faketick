@@ -268,8 +268,9 @@ const PickPlan = ({ onsetdata }) => {
 
   console.log(getShortMonth()); // Example output: "Dec"
 
+  let for_free = getShortMonth();
   console.log({
-    yaya,
+    yaya: typeof for_free,
   });
 
   // Map yaya data to plans
@@ -287,15 +288,23 @@ const PickPlan = ({ onsetdata }) => {
       action:
         item.plan === "TRIAL"
           ? () => {
-              Resend_Mutation.mutate({
-                subscription: item?._id,
-                months: getShortMonth(),
-              });
               console.log({
-                ldkd: item,
+                subscription: item?._id,
+
+                months: [for_free],
               }); //onsetdata(true)
+              Resend_Mutation.mutate({
+                plan: item?._id,
+                months: [for_free],
+              });
             }
-          : () => navigation.navigate("ChoosePlanCalender"),
+          : () => {
+              console.log({
+                plan: item?._id,
+
+                months: [for_free],
+              }); //onsetdata(true)
+            },
     };
   });
 
@@ -347,28 +356,25 @@ const PickPlan = ({ onsetdata }) => {
           uuuu: constraints,
         });
 
-        // if (constraints) {
-        //   const errorKeys = Object.keys(constraints);
+        if (constraints) {
+          const errorKeys = Object.keys(constraints);
 
-        //   errorKeys.forEach((key) => {
-        //     Toast.show({
-        //       type: "error",
-        //       text1: constraints[key], // Display the constraint message
-        //     });
-        //   });
-        // } else {
-        //   Toast.show({
-        //     type: "error",
-        //     text1: error?.response?.data || "An unexpected error occurred.",
-        //   });
-        // }
+          errorKeys.forEach((key) => {
+            Toast.show({
+              type: "error",
+              text1: constraints[key], // Display the constraint message
+            });
+          });
+        } else {
+          Toast.show({
+            type: "error",
+            text1: error?.response?.data || "An unexpected error occurred.",
+          });
+        }
       },
     }
   );
 
-  console.log({
-    kk: plans[0],
-  });
   const renderPlanCard = ({ item }) => (
     <View style={styles.MainCardContainer}>
       <View style={styles.backgroundCard}>
@@ -400,10 +406,7 @@ const PickPlan = ({ onsetdata }) => {
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => item.action(navigation)}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => item.action()}>
           <Text
             style={styles.CardText({
               fontSize: 16,

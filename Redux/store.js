@@ -5,9 +5,7 @@ import { combineReducers } from "redux";
 import OnboardingSlice from "./OnboardingSlice";
 import BookATripSlice from "./BookATripSlice";
 import AuthSlice from "./AuthSlice";
-import RouteSlice from "./Rider/RouteSlice";
-import TripSLice from "./Rider/TripSLice";
-import DriverTripSLice from "./Driver/DriverTripSLice";
+
 import UploadSlice from "./Ticket/UploadSlice";
 
 // import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from "redux-persist";
@@ -17,9 +15,6 @@ const reducers = combineReducers({
   UploadSlice: UploadSlice,
   OnboardingSlice: OnboardingSlice,
   BookATripSlice: BookATripSlice,
-  RouteSlice: RouteSlice,
-  TripSLice: TripSLice,
-  DriverTripSLice: DriverTripSLice,
 });
 
 const persistConfig = {
