@@ -72,9 +72,10 @@ const CategoriesPage = ({ route }) => {
   // setisLoading(false);
 
   const { comment, imageUri } = route.params?.image_data; // Access the passed data
-  // console.log({
-  //   uuuu,
-  // });
+  console.log({
+    comment,
+    imageUri,
+  });
   // const { imageUri } = route.params; // Access the passed data
 
   const Upload_Mutation = useMutation(

@@ -36,9 +36,7 @@ export const Category_Fun = createAsyncThunk(
       };
 
       const response = await axios.get(`${API_BASEURL}categories`, config);
-      console.log({
-        papapapaooo: response.data,
-      });
+
       return response.data;
     } catch (error) {
       const errorMessage = handleApiError(error);
@@ -63,7 +61,6 @@ export const Get_All_Uplaod_Fun = createAsyncThunk(
       };
 
       const response = await axios.get(`${API_BASEURL}uploads`, config);
-      console.log({ llll: response?.data });
       return response.data;
     } catch (error) {
       console.log({

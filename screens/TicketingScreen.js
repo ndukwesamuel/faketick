@@ -68,9 +68,6 @@ const TicketingScreen = ({}) => {
   const sOnboarding = useSelector((state) => state.UploadSlice);
   const { user_data } = useSelector((state) => state.Auth);
 
-  console.log({
-    lkl: formatDate(user_data?.subscription?.period[0]?.exp_date),
-  });
   useEffect(() => {
     dispatch(Category_Fun());
 
@@ -239,7 +236,9 @@ const TicketingScreen = ({}) => {
                     marginRight: 10,
                   }}
                 >
-                  <TouchableOpacity onPress={handleTakePicture}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("camera")}
+                  >
                     <Image
                       source={require("../assets/ticket/Group 227.png")}
                       style={{

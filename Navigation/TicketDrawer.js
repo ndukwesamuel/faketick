@@ -60,10 +60,6 @@ function CustomDrawerContent(props) {
     }
   };
 
-  console.log({
-    lllaaaaa: user_data,
-  });
-
   return (
     <DrawerContentScrollView {...props} style={{ backgroundColor: "#000" }}>
       {/* User Profile Section */}

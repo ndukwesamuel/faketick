@@ -33,6 +33,9 @@ const ImagePreviewScreen = ({ route }) => {
     }
   };
 
+  console.log({
+    opopo: image_data,
+  });
   return (
     <AppScreen>
       <ImageBackground

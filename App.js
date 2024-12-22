@@ -129,10 +129,6 @@ const MainScreen = () => {
 
   const dispatch = useDispatch();
 
-  console.log({
-    gffkaka: user_profile_data,
-  });
-
   // dispatch(reset_login());
 
   useEffect(() => {

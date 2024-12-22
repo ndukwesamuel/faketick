@@ -8,7 +8,13 @@ import {
   Text,
   ScrollView,
   Modal,
+  ActivityIndicator,
+  RefreshControl,
+  Dimensions,
 } from "react-native";
+import * as FileSystem from "expo-file-system";
+import * as MediaLibrary from "expo-media-library";
+import { Alert, Platform } from "react-native";
 import BackgroundDefaultStyle from "../../components/Ticketcomponent/BackgroundDefaultStyle";
 import BackButton from "../../components/Ticketcomponent/BackButton";
 import pencilIcon from "../../assets/pencil.png";
@@ -26,6 +32,8 @@ import { formatDate, formatDateandTime } from "../../utills/DateTime";
 
 const DownloadFilesPage = () => {
   const navigation = useNavigation();
+  const screenHeight = Dimensions.get("window").height;
+  const [downloadLoading, setdownloadLoading] = useState(false);
 
   const dispatch = useDispatch();
   const { upload_data } = useSelector((state) => state.UploadSlice);
@@ -52,6 +60,18 @@ const DownloadFilesPage = () => {
 
     return () => {};
   }, []);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    // Set the refreshing state to true
+    setRefreshing(true);
+    dispatch(Category_Fun());
+    dispatch(Get_All_Uplaod_Fun());
+
+    // Wait for 2 seconds
+    setRefreshing(false);
+  };
 
   //
   const iconArray = [pencilIcon, trashIcon];
@@ -92,17 +112,78 @@ const DownloadFilesPage = () => {
       fileSize: "503.1 KB",
     },
   ];
-  const RenderImage = ({ item }) => {
-    return (
-      <TouchableOpacity>
-        <Image source={item} resizeMode="contain" style={styles.icon} />
-      </TouchableOpacity>
-    );
+  const handleDownload = async (uri) => {
+    setdownloadLoading(true);
+    try {
+      console.log({
+        ccccc: uri,
+      });
+      // Request permissions (necessary for MediaLibrary)
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission required",
+          "Storage permission is needed to download files."
+        );
+        return;
+      }
+
+      // Define the file URI to save the file locally
+      const fileUri = FileSystem.documentDirectory + uri.split("/").pop();
+
+      // Download the file
+      const download = await FileSystem.downloadAsync(uri, fileUri);
+
+      // Save the file to the user's device
+      const asset = await MediaLibrary.createAssetAsync(download.uri);
+
+      console.log({
+        nncnc: asset,
+      });
+
+      if (Platform.OS === "android") {
+        const albumName = "Ticketing"; // Use a unique name for testing
+
+        try {
+          const album = await MediaLibrary.getAlbumAsync(albumName);
+
+          if (!album) {
+            // Create a new album if it doesn't exist
+            console.log(
+              `Album "${albumName}" does not exist. Creating it now...`
+            );
+            await MediaLibrary.createAlbumAsync(albumName, asset, false);
+            console.log(`Successfully created album: ${albumName}`);
+          } else {
+            // Add the asset to the existing album
+            console.log(`Album "${albumName}" exists. Adding asset to it...`);
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+            console.log(`Successfully added asset to album: ${albumName}`);
+          }
+        } catch (error) {
+          // Handle any errors encountered during the process
+          console.error("Error handling media library:", error.message);
+        }
+      }
+
+      setdownloadLoading(false);
+
+      Alert.alert(
+        "Download complete",
+        "The image has been saved to your device."
+      );
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+      setdownloadLoading(false);
+
+      Alert.alert(
+        "Download failed",
+        "There was an error downloading the file."
+      );
+    }
   };
+
   const RenderDownloadFile = ({ item }) => {
-    console.log({
-      hhhh: item?.file[0]?.uri,
-    });
     return (
       <View>
         {/* <TouchableOpacity style={styles.downloadFileMainContainer}> */}
@@ -130,11 +211,14 @@ const DownloadFilesPage = () => {
               </Text>
             </View>
           </TouchableOpacity>
-          <Image
-            source={downloadIcon}
-            resizeMode="contain"
-            style={styles.bodyHeaderButtonIcon(30)}
-          />
+
+          <TouchableOpacity onPress={() => handleDownload(item?.file[0]?.uri)}>
+            <Image
+              source={downloadIcon}
+              resizeMode="contain"
+              style={styles.bodyHeaderButtonIcon(30)}
+            />
+          </TouchableOpacity>
         </View>
 
         <Modal
@@ -182,7 +266,10 @@ const DownloadFilesPage = () => {
         </TouchableOpacity>
         <View style={styles.bodyHeaderContainer}>
           <HeaderTitle Title={"Recent"} />
-          <TouchableOpacity style={styles.bodyHeaderButton}>
+          <TouchableOpacity
+            style={styles.bodyHeaderButton}
+            // onPress={handleDownload}
+          >
             <Text style={styles.bodyHeaderButtonText}>Download all</Text>
             <Image
               source={downloadIcon}
@@ -191,14 +278,18 @@ const DownloadFilesPage = () => {
             />
           </TouchableOpacity>
         </View>
-        {/* <View style={{ paddingHorizontal: 20 }}>
-          <FlatList
-            data={upload_data?.docs}
-            renderItem={(item) => <RenderDownloadFile item={item.item} />}
-          />
-        </View> */}
 
-        <View style={{ paddingHorizontal: 20 }}>
+        {downloadLoading && (
+          <View>
+            <ActivityIndicator color="white" size="large" />
+          </View>
+        )}
+        <View
+          style={{
+            paddingHorizontal: 20,
+            height: screenHeight * 0.8, // Restrict height to 60% of the screen
+          }}
+        >
           <FlatList
             data={upload_data?.docs}
             keyExtractor={(item, index) => item._id || index.toString()} // Ensure a unique key for each item
@@ -207,6 +298,9 @@ const DownloadFilesPage = () => {
             contentContainerStyle={{
               paddingBottom: 20, // Adds padding at the bottom for smoother scrolling
             }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             ListEmptyComponent={
               <Text
                 style={{ color: "#fff", textAlign: "center", marginTop: 20 }}
