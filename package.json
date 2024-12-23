@@ -1,5 +1,5 @@
 {
-  "name": "busapp",
+  "name": "ticketing",
   "version": "1.06",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ticketing",
-    "slug": "ticketing",
+    "name": "Ticketing",
+    "slug": "Ticketing",
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#005858"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
       [
         "expo-image-picker",
@@ -25,7 +27,9 @@
       "jsEngine": "jsc",
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["audio"],
+        "UIBackgroundModes": [
+          "audio"
+        ],
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access camera.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone"
       },
@@ -49,7 +53,9 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.samheart.busapp",
-      "permissions": ["android.permission.RECORD_AUDIO"]
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -57,7 +63,7 @@
     "jsEngine": "hermes",
     "extra": {
       "eas": {
-        "projectId": "98ce42ba-c88e-452e-b551-e9a4725356e0"
+        "projectId": "42991a96-b69d-4ed4-9c16-aaa3cff37e63"
       }
     }
   }
