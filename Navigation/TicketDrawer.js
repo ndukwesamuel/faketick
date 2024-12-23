@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     // borderTopWidth: 1,
     borderTopColor: "gray",
     padding: 10,
-    top: "100%",
-    position: "relative",
+    // top: "70%",
+    // position: "absolute",
   },
   settingsLabel: {
     flexDirection: "row",

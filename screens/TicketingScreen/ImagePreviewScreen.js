@@ -25,6 +25,9 @@ const ImagePreviewScreen = ({ route }) => {
     navigation.navigate("Categories", { imageUri });
   };
 
+  console.log({
+    ommxx: imageUri,
+  });
   return (
     <AppScreen>
       <ImageBackground
@@ -34,16 +37,6 @@ const ImagePreviewScreen = ({ route }) => {
         }}
         resizeMode="stretch"
       >
-        {/* <ReusableBackButton
-          style={{
-            height: 40,
-            width: 40,
-            position: "absolute",
-            top: 30,
-            left: 20,
-          }}
-        /> */}
-
         <TouchableOpacity
           onPress={
             () => {

@@ -112,6 +112,7 @@ export const NavigationScreen = () => {
   const { user_data } = useSelector((state) => state.Auth);
 
   const [country, setCountry] = useState("Loading...");
+  // dispatch(reset_login());
 
   return (
     <NavigationContainer>
@@ -127,6 +128,10 @@ const MainScreen = () => {
     useSelector((state) => state?.Auth);
 
   const dispatch = useDispatch();
+
+  console.log({
+    gffkaka: user_profile_data,
+  });
 
   // dispatch(reset_login());
 

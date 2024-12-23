@@ -56,10 +56,32 @@ export const Login_Fun = createAsyncThunk(
         kaka: error?.response?.data?.error,
       });
       const errorMessage = error?.response?.data?.error;
-      Toast.show({
-        type: "error",
-        text1: `${errorMessage}`,
+      const constraints = error?.response?.data[0]?.constraints;
+
+      console.log({
+        asas: constraints,
       });
+
+      if (constraints) {
+        const errorKeys = Object.keys(constraints);
+
+        errorKeys.forEach((key) => {
+          Toast.show({
+            type: "error",
+            text1: constraints[key], // Display the constraint message
+          });
+        });
+      } else {
+        Toast.show({
+          type: "error",
+          text1:
+            error?.response?.data?.error || "An unexpected error occurred.",
+        });
+      }
+      // Toast.show({
+      //   type: "error",
+      //   text1: `${errorMessage}`,
+      // });
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }
@@ -85,9 +107,13 @@ export const UserProfile_Fun = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      console.log({ iiiii: error?.response });
+      console.log({ iiiii: error?.response?.data?.error?.message });
 
-      const errorMessage = handleApiError(error);
+      Toast.show({
+        type: "error",
+        text1: `${error?.response?.data?.error?.message}`,
+      });
+      // const errorMessage = handleApiError(error);
       return thunkAPI.rejectWithValue(errorMessage);
     }
   }

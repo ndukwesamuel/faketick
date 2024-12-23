@@ -19,6 +19,9 @@ export default function Login({ navigation, onSetAuth }) {
   const user = useSelector((state) => state.Auth);
   const { user_isLoading } = useSelector((state) => state.Auth);
 
+  console.log({
+    fg: user_isLoading,
+  });
   const dispatch = useDispatch();
 
   const handleLogin = async () => {

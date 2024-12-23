@@ -42,6 +42,27 @@ const TicketingScreen = ({}) => {
     }
   };
 
+  const handleTakePicture = async () => {
+    // Request permissions to access the camera
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access the camera is required!");
+      return;
+    }
+
+    // Open the camera
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true, // Optional: Allow cropping
+      aspect: [4, 3], // Aspect ratio for editing
+      quality: 1, // Set image quality
+    });
+
+    if (!result.canceled) {
+      // Navigate to the next screen with the captured image
+      navigation.navigate("ImagePreview", { imageUri: result.assets[0].uri });
+    }
+  };
+
   const dispatch = useDispatch();
   const sOnboarding = useSelector((state) => state.UploadSlice);
 
@@ -50,6 +71,40 @@ const TicketingScreen = ({}) => {
 
     return () => {};
   }, []);
+
+  const today = new Date();
+
+  // Format date components
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const dayOfWeek = days[today.getDay()]; // Day name
+  const day = today.getDate(); // Day of the month
+  const month = months[today.getMonth()]; // Month name
+  const year = today.getFullYear(); // Year
+
+  const formattedDate = `${dayOfWeek}, ${day} ${month} ${year}`;
 
   return (
     <AppScreen>
@@ -89,7 +144,8 @@ const TicketingScreen = ({}) => {
                   marginTop: 4,
                 }}
               >
-                Today is Tuesday 30 DEC 2025
+                {formattedDate}
+                {/* Today is Tuesday 30 DEC 2025 */}
               </Text>
             </View>
 
@@ -99,8 +155,9 @@ const TicketingScreen = ({}) => {
                 backgroundColor: "#fff",
                 borderRadius: 12,
                 padding: 20,
+                paddingBottom: 40,
                 marginTop: 50,
-                height: screenHeight * 0.5, // Set height to 70% of the screen height
+                height: screenHeight * 0.55, // Set height to 70% of the screen height
                 // borderWidth: 10,
                 // borderColor: "white",
               }}
@@ -145,7 +202,7 @@ const TicketingScreen = ({}) => {
                 }}
               >
                 {/* Take a Picture */}
-                <TouchableOpacity
+                {/* <View
                   style={{
                     alignItems: "center",
                     flex: 1,
@@ -170,7 +227,7 @@ const TicketingScreen = ({}) => {
                   >
                     Take a picture
                   </Text>
-                </TouchableOpacity>
+                </View>
 
                 {/* Upload */}
                 <TouchableOpacity

@@ -35,10 +35,10 @@ export const Category_Fun = createAsyncThunk(
         },
       };
 
-      const response = await axios.get(`${API_BASEURL}category`, config);
-      //   console.log({
-      //     ooo: response.data,
-      //   });
+      const response = await axios.get(`${API_BASEURL}categories`, config);
+      console.log({
+        papapapaooo: response.data,
+      });
       return response.data;
     } catch (error) {
       const errorMessage = handleApiError(error);
