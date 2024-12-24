@@ -131,6 +131,10 @@ const MainScreen = () => {
 
   // dispatch(reset_login());
 
+  console.log({
+    gkdkd: user_profile_data?.subscription,
+  });
+
   useEffect(() => {
     dispatch(Subscription_Fun());
     dispatch(UserProfile_Fun());
@@ -138,31 +142,11 @@ const MainScreen = () => {
     return () => {};
   }, []);
 
-  // const isRegistered =
-  //   user_profile_data?.data?.has_filled_security_question !== false;
-  // //  &&
-  // // user_profile_data?.data?.has_default_address !== false;
-
-  // console.log({
-  //   ddd: isRegistered,
-  // });
-
-  // if (isRegistered) {
-  //   return <UserNavigation />;
-  // } else {
-  //   return (
-  //     <>
-  //       {!user_profile_data?.data?.has_filled_security_question && <Security />}
-  //       {/* {!user_profile_data?.data?.has_default_address && <Security />} */}
-  //     </>
-  //   );
-  // }
-
   const [subscription, setsubscription] = useState(false);
   const changesubscriptionType = (type) => {
     setsubscription(type);
   };
-  if (user_data?.subscription) {
+  if (user_profile_data?.subscription) {
     return <TicketDrawer />;
   } else {
     return <Subcription onsetdata={changesubscriptionType} />;

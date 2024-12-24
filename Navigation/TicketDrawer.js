@@ -112,6 +112,16 @@ function CustomDrawerContent(props) {
         />
 
         <DrawerItem
+          label={() => (
+            <View style={styles.settingsLabel}>
+              {/* <AntDesign name="setting" size={20} color="white" /> */}
+              <Text style={styles.settingsText}>Plan</Text>
+            </View>
+          )}
+          onPress={() => navigation.navigate("ChoosePricePlan")} // Navigate to the Settings screen
+        />
+
+        <DrawerItem
           label={() => <Text style={styles.settingsText}>Logout</Text>}
           labelStyle={{ color: "white" }}
           onPress={handleLogout}

@@ -101,7 +101,7 @@ export const UserProfile_Fun = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
-      const response = await axios.get(`${API_BASEURL}user`, config);
+      const response = await axios.get(`${API_BASEURL}loggeduser`, config);
       console.log({
         iaois: response.data,
       });
@@ -173,6 +173,24 @@ export const AuthSlice = createSlice({
         state.user_message = action.payload;
         state.user_data = null;
         state.user_isSuccess = false;
+      })
+      .addCase(UserProfile_Fun.pending, (state) => {
+        state.user_profile_isLoading = true;
+      })
+      .addCase(UserProfile_Fun.fulfilled, (state, action) => {
+        state.user_profile_isLoading = false;
+        state.user_profile_isSuccess = true;
+        state.user_profile_isError = false;
+        state.user_profile_message = null;
+        state.user_profile_data = action.payload;
+      })
+
+      .addCase(UserProfile_Fun.rejected, (state, action) => {
+        state.user_profile_isLoading = false;
+        state.user_profile_isError = true;
+        state.user_profile_message = action.payload;
+        state.user_profile_data = null;
+        state.user_profile_isSuccess = false;
       })
       .addCase(Subscription_Fun.pending, (state) => {
         state.subscription_isLoading = true;
