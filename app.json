@@ -2,6 +2,7 @@
   "expo": {
     "name": "Ticketing",
     "slug": "Ticketing",
+    "scheme": "ticketing",
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -63,7 +64,7 @@
     "jsEngine": "hermes",
     "extra": {
       "eas": {
-        "projectId": "42991a96-b69d-4ed4-9c16-aaa3cff37e63"
+        "projectId": "c0da81cd-a822-4442-8515-fb74d70d6285"
       }
     }
   }

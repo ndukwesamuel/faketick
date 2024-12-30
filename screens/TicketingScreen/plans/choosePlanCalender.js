@@ -7,7 +7,13 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Alert,
 } from "react-native";
+import {
+  StripeProvider,
+  usePaymentSheet,
+  useStripe,
+} from "@stripe/stripe-react-native";
 import Checkbox from "expo-checkbox";
 import backArrowIcon from "../../../assets/left-arrow.png";
 import { useNavigation } from "@react-navigation/native";
@@ -20,17 +26,10 @@ const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 const ChoosePlanCalender = ({ route }) => {
   const { selectedPlan } = route.params;
 
-  console.log({
-    uuuuu: selectedPlan,
-  });
   const [selectedMonths, setSelectedMonths] = useState({});
   const navigation = useNavigation();
   const { subscription_data, user_data } = useSelector((state) => state?.Auth);
   const dispatch = useDispatch();
-
-  console.log({
-    klklklk: selectedMonths,
-  });
 
   const months = [
     "Jan",
@@ -65,20 +64,17 @@ const ChoosePlanCalender = ({ route }) => {
     },
     {
       onSuccess: (success) => {
-        console.log({
-          llklk: success?.data,
-        });
-
-        const { overlapped } = success?.data || {};
-        if (Array.isArray(overlapped) && overlapped.length > 0) {
-          const initialSelectedMonths = overlapped.reduce((acc, month) => {
-            acc[month] = true; // Mark months in the `overlapped` array as checked
-            return acc;
-          }, {});
-          setSelectedMonths(initialSelectedMonths);
-        } else {
-          setSelectedMonths({}); // Clear all selections if `overlapped` is empty
-        }
+        console.log({ fff: success?.data });
+        // const { overlapped } = success?.data || {};
+        // if (Array.isArray(overlapped) && overlapped.length > 0) {
+        //   const initialSelectedMonths = overlapped.reduce((acc, month) => {
+        //     acc[month] = true; // Mark months in the `overlapped` array as checked
+        //     return acc;
+        //   }, {});
+        //   setSelectedMonths(initialSelectedMonths);
+        // } else {
+        //   setSelectedMonths({}); // Clear all selections if `overlapped` is empty
+        // }
 
         // Toast.show({
         //   type: "success",
@@ -86,9 +82,6 @@ const ChoosePlanCalender = ({ route }) => {
         // });
       },
       onError: (error) => {
-        console.log({
-          errorssss: error?.response?.data?.error?.message,
-        });
         Toast.show({
           type: "error",
           text1: `${error?.response?.data?.error?.message}`,
@@ -111,19 +104,14 @@ const ChoosePlanCalender = ({ route }) => {
     },
     {
       onSuccess: (success) => {
-        console.log({
-          jajaj: success?.data,
-        });
-        Toast.show({
-          type: "success",
-          text1: `${success?.data?.message}`,
-        });
+        checkout(success?.data);
+        // Toast.show({
+        //   type: "success",
+        //   text1: `${success?.data?.message}`,
+        // });
         // dispatch(checkOtp(true));
       },
       onError: (error) => {
-        console.log({
-          errorssss: error?.response?.data,
-        });
         Toast.show({
           type: "error",
           text1: `${error?.response?.data?.message}`,
@@ -131,6 +119,39 @@ const ChoosePlanCalender = ({ route }) => {
       },
     }
   );
+
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+  const checkout = async (data) => {
+    // 2. Initialize the Payment sheet
+    const initResponse = await initPaymentSheet({
+      merchantDisplayName: "Tiketing",
+      paymentIntentClientSecret: data?.clientSecret,
+    });
+    if (initResponse.error) {
+      Alert.alert("Something went wrong");
+      return;
+    }
+
+    // 3. Present the Payment Sheet from Stripe
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Payment Failed: ${error.code}`, error.message);
+    } else {
+      Alert.alert(
+        "Payment Successful",
+        "Your payment was processed successfully!",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("Home"), // Replace "Home" with your home screen route name
+          },
+        ]
+      );
+    }
+  };
+
   const toggleMonth = (month) => {
     setSelectedMonths((prevState) => ({
       ...prevState,
@@ -161,11 +182,11 @@ const ChoosePlanCalender = ({ route }) => {
       months: selectedMonthsArray,
     };
 
-    console.log({
-      paymentData,
-    });
-
     payformont_Mutation.mutate(paymentData);
+  };
+
+  const daaa = () => {
+    console.log("hel me oooo");
   };
 
   return (

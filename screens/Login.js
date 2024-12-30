@@ -136,6 +136,8 @@ export default function Login({ navigation, onSetAuth }) {
             alignSelf: "flex-end",
             marginVertical: 10,
           }}
+
+          // onPress={}
         >
           Forgot password?
         </Text>

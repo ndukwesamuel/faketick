@@ -66,7 +66,7 @@ const TicketingScreen = ({}) => {
 
   const dispatch = useDispatch();
   const sOnboarding = useSelector((state) => state.UploadSlice);
-  const { user_data } = useSelector((state) => state.Auth);
+  const { user_data, user_profile_data } = useSelector((state) => state.Auth);
 
   useEffect(() => {
     dispatch(Category_Fun());
@@ -75,6 +75,10 @@ const TicketingScreen = ({}) => {
   }, []);
 
   const today = new Date();
+
+  console.log({
+    james: user_profile_data?.subscription?.period,
+  });
 
   // Format date components
   const days = [
@@ -147,7 +151,6 @@ const TicketingScreen = ({}) => {
                 }}
               >
                 {formattedDate}
-                {/* Today is Tuesday 30 DEC 2025 */}
               </Text>
             </View>
 
@@ -179,7 +182,7 @@ const TicketingScreen = ({}) => {
                   fontWeight: "700",
                 }}
               >
-                {user_data?.subscription?.plan?.plan}
+                {user_profile_data?.subscription?.plan?.plan}
               </Text>
               <Text
                 style={{
@@ -189,8 +192,13 @@ const TicketingScreen = ({}) => {
                   fontWeight: "400",
                 }}
               >
+                {console.log({
+                  xzzz: user_profile_data?.subscription,
+                })}
                 Your free trial ends on
-                {`${formatDate(user_data?.subscription?.period[0]?.exp_date)}`}
+                {`${formatDate(
+                  user_profile_data?.subscription?.period[0]?.exp_date
+                )}`}
               </Text>
 
               {/* Options */}

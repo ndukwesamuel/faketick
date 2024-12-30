@@ -115,10 +115,20 @@ function CustomDrawerContent(props) {
           label={() => (
             <View style={styles.settingsLabel}>
               {/* <AntDesign name="setting" size={20} color="white" /> */}
-              <Text style={styles.settingsText}>Plan</Text>
+              <Text style={styles.settingsText}>Upgrade plan</Text>
             </View>
           )}
           onPress={() => navigation.navigate("ChoosePricePlan")} // Navigate to the Settings screen
+        />
+
+        <DrawerItem
+          label={() => (
+            <View style={styles.settingsLabel}>
+              {/* <AntDesign name="setting" size={20} color="white" /> */}
+              <Text style={styles.settingsText}>History</Text>
+            </View>
+          )}
+          onPress={() => navigation.navigate("history")} // Navigate to the Settings screen
         />
 
         <DrawerItem

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -17,11 +17,15 @@ import Toast from "react-native-toast-message";
 import axios from "axios";
 import { useMutation } from "react-query";
 import { UserProfile_Fun, reset_login } from "../../Redux/AuthSlice";
+import PickCalenda from "./PickCalenda";
+import backArrowIcon from "../../assets/left-arrow.png";
 
 const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
 const PickPlan = ({ onsetdata }) => {
+  // const navigation = useNavigation();
   const navigation = useNavigation();
+  const [calenda, setcalenda] = useState(false);
   const { subscription_data, user_data } = useSelector((state) => state?.Auth);
   const dispatch = useDispatch();
   const yaya = subscription_data?.docs || [];
@@ -44,6 +48,18 @@ const PickPlan = ({ onsetdata }) => {
     return monthNames[currentMonthIndex];
   }
 
+  const [newcalendaData, setnewcalendaData] = useState(null);
+
+  const handleSubscribe = (premiumPlan) => {
+    console.log({
+      premiumPlan,
+    });
+
+    setcalenda(true);
+    setnewcalendaData(premiumPlan);
+
+    // navigation.navigate("ChoosePlanCalender", { selectedPlan: premiumPlan });
+  };
   console.log(getShortMonth()); // Example output: "Dec"
 
   let for_free = getShortMonth();
@@ -76,13 +92,18 @@ const PickPlan = ({ onsetdata }) => {
                 months: [for_free],
               });
             }
-          : () => {
-              console.log({
-                plan: item?._id,
+          : () => handleSubscribe(item),
+      // navigation.navigate("ChoosePlanCalender", { selectedPlan: item }),
 
-                months: [for_free],
-              }); //onsetdata(true)
-            },
+      // {
+      //     navigation.navigate("ChoosePlanCalender", { selectedPlan: item });
+
+      //     console.log({
+      //       plan: item,
+
+      //       months: [for_free],
+      //     }); //onsetdata(true)
+      //   },
     };
   });
 
@@ -198,35 +219,56 @@ const PickPlan = ({ onsetdata }) => {
 
   return (
     <AppScreen>
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>CHOOSE YOUR PLAN</Text>
-          <Text style={styles.description}>
-            Start with{" "}
-            <Text style={{ color: "#008B8B" }}>30 days free trial</Text>,
-            upgrade or downgrade anytime
-          </Text>
-        </View>
+      {calenda ? (
+        <PickCalenda maindata={newcalendaData} close={setcalenda} />
+      ) : (
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => dispatch(reset_login())}
+            style={{
+              height: 40,
+              width: 40,
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 100,
+              position: "absolute",
+            }}
+          >
+            <Image
+              source={backArrowIcon}
+              resizeMode="contain"
+              style={{ width: 30, height: 30 }}
+            />
+          </TouchableOpacity>
+          <View style={styles.headerContainer}>
+            <Text style={styles.header}>CHOOSE YOUR PLAN</Text>
+            <Text style={styles.description}>
+              Start with{" "}
+              <Text style={{ color: "#008B8B" }}>30 days free trial</Text>,
+              upgrade or downgrade anytime
+            </Text>
+          </View>
 
-        <View style={{ marginTop: 40 }}>
-          <FlatList
-            data={plans}
-            keyExtractor={(item) => item.id}
-            renderItem={renderPlanCard}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingHorizontal: 15 }}
-          />
-        </View>
+          <View style={{ marginTop: 40 }}>
+            <FlatList
+              data={plans}
+              keyExtractor={(item) => item.id}
+              renderItem={renderPlanCard}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: 15 }}
+            />
+          </View>
 
-        {Resend_Mutation.isLoading && (
-          <ActivityIndicator size="large" color="white" />
-        )}
+          {Resend_Mutation.isLoading && (
+            <ActivityIndicator size="large" color="white" />
+          )}
 
-        <View>
-          <Text style={styles.footerText}>. Terms and conditions</Text>
+          <View>
+            <Text style={styles.footerText}>. Terms and conditions</Text>
+          </View>
         </View>
-      </View>
+      )}
     </AppScreen>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -11,6 +11,7 @@ import checkIcon from "../../../assets/tick-circle.png";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
+import { Subscription_Fun } from "../../../Redux/AuthSlice";
 
 const ChoosePricePlans = () => {
   const navigation = useNavigation();
@@ -21,6 +22,11 @@ const ChoosePricePlans = () => {
   console.log({
     yaya,
   });
+
+  useEffect(() => {
+    dispatch(Subscription_Fun());
+    return () => {};
+  }, []);
 
   const premiumPlan = yaya.find((plan) => plan.plan === "PREMIUM");
 

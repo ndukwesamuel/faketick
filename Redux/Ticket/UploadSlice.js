@@ -19,7 +19,46 @@ const initialState = {
   upload_data_isSuccess: false,
   upload_data_isLoading: false,
   upload_data_message: null,
+
+  history_data: null,
+  history_data_isError: false,
+  history_data_isSuccess: false,
+  history_data_isLoading: false,
+  history_data_message: null,
 };
+
+export const History_Fun = createAsyncThunk(
+  "UploadSlice/History_Fun",
+  async (_, thunkAPI) => {
+    try {
+      let token = thunkAPI.getState()?.Auth?.user_data?.token;
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.get(
+        `${API_BASEURL}subscription-history`,
+        config
+      );
+      console.log({
+        tunde: response?.data,
+      });
+      return response.data;
+    } catch (error) {
+      console.log({
+        dmmcmc: error?.response,
+      });
+      const errorMessage = handleApiError(error);
+
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);
 
 export const Category_Fun = createAsyncThunk(
   "UploadSlice/Category_Fun",
@@ -133,6 +172,23 @@ export const UploadSlice = createSlice({
         state.upload_data_isError = true;
         state.upload_data_message = action.payload;
         state.upload_data = null;
+      })
+      .addCase(History_Fun.pending, (state) => {
+        state.history_data_isLoading = true;
+      })
+      .addCase(History_Fun.fulfilled, (state, action) => {
+        state.history_data_isLoading = false;
+        state.history_data_isSuccess = true;
+        state.history_data_isError = false;
+        state.history_data = action.payload;
+        state.history_data_message = null;
+      })
+      .addCase(History_Fun.rejected, (state, action) => {
+        state.history_data_isLoading = false;
+        state.upload_data_isSuccess = false;
+        state.upload_data_isError = true;
+        state.history_data_message = action.payload;
+        state.history_data = null;
       });
   },
 });

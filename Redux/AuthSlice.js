@@ -126,9 +126,6 @@ export const Subscription_Fun = createAsyncThunk(
       let token = thunkAPI.getState()?.Auth?.user_data?.token;
       // ?.data?.token;
 
-      console.log({
-        ui: token,
-      });
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -136,12 +133,19 @@ export const Subscription_Fun = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       };
+
+      console.log({
+        kmmmm: "me",
+      });
       const response = await axios.get(`${API_BASEURL}/subscriptions`, config);
       console.log({
         gagaga: response.data,
       });
       return response.data;
     } catch (error) {
+      console.log({
+        fake: error?.response?.data,
+      });
       const errorMessage = handleApiError(error);
       return thunkAPI.rejectWithValue(errorMessage);
     }

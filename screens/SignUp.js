@@ -210,28 +210,62 @@ export default function SignUp({ navigation, onSetAuth }) {
         });
         onSetAuth("verify");
       },
+      // onError: (error) => {
+      //   console.log({
+      //     kkk: error?.response?.data?.error,
+      //   });
+
+      //   const constraints = error?.response?.data[0]?.constraints;
+
+      //   if (constraints) {
+      //     const errorKeys = Object.keys(constraints);
+
+      //     errorKeys.forEach((key) => {
+      //       Toast.show({
+      //         type: "error",
+      //         text1: constraints[key], // Display the constraint message
+      //       });
+      //     });
+      //   } else {
+      //     Toast.show({
+      //       type: "error",
+      //       text1: error?.response?.data || "An unexpected error occurred.",
+      //     });
+      //     return;
+      //   }
+      // },
+
       onError: (error) => {
         console.log({
-          fire: error?.response?.data,
-          afire: error?.response?.data[0].constraints,
+          kkk: error?.response?.data?.error,
         });
 
-        const constraints = error?.response?.data[0]?.constraints;
+        const errorMessage = error?.response?.data?.error;
 
-        if (constraints) {
-          const errorKeys = Object.keys(constraints);
-
-          errorKeys.forEach((key) => {
-            Toast.show({
-              type: "error",
-              text1: constraints[key], // Display the constraint message
-            });
-          });
-        } else {
+        if (errorMessage) {
+          // Show a toast for a specific error message
           Toast.show({
             type: "error",
-            text1: error?.response?.data || "An unexpected error occurred.",
+            text1: errorMessage,
           });
+        } else {
+          const constraints = error?.response?.data?.[0]?.constraints;
+
+          if (constraints) {
+            const errorKeys = Object.keys(constraints);
+
+            errorKeys.forEach((key) => {
+              Toast.show({
+                type: "error",
+                text1: constraints[key], // Display the constraint message
+              });
+            });
+          } else {
+            Toast.show({
+              type: "error",
+              text1: "An unexpected error occurred.",
+            });
+          }
         }
       },
     }

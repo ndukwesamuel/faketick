@@ -43,6 +43,7 @@ const Stack = createNativeStackNavigator();
 const screenOptions = {
   headerShown: false, // This hides the header for all screens by default
 };
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 SplashScreen.preventAutoHideAsync();
 export default function App() {
@@ -65,15 +66,23 @@ export default function App() {
     return null;
   }
   console.log(API_BASEURL);
+  const STRIPE_KEY =
+    "pk_test_51PNBosC8HrxgN6La95JbW9cKmOFYgeKyrEKTMvBaFUTA8E3PM4ovY0xG6BBo8kZf8bq0zzGBjHf1yYsKzyb44Sgs00UVbHkUWi";
+
+  // "pk_test_51NREY2IOG1LagWsBM1XjuadyjIdl4tpgL5CGNnUqihzEzXGpSvtURCJoVCRN2awhFFRvhKZ0Yu3SNhTHL7j85sJR00IE1tMfUn";
+  const RETURN_URL = "ticketing://stripe/return";
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <SafeAreaProvider style={styles.container}>
-            <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-              <NavigationScreen />
-            </View>
-          </SafeAreaProvider>
+          {/* <StripeProvider publishableKey={STRIPE_KEY}> */}
+          <StripeProvider publishableKey={STRIPE_KEY}>
+            <SafeAreaProvider style={styles.container}>
+              <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+                <NavigationScreen />
+              </View>
+            </SafeAreaProvider>
+          </StripeProvider>
         </PersistGate>
       </Provider>
     </QueryClientProvider>
