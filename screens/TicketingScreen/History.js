@@ -27,20 +27,16 @@ const History = () => {
   // Render each item in the FlatList
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      {console.log({
-        kkss: item?.period,
-      })}
-      <Text style={styles.itemText}>Plan ID: {item?.plan?._id || "N/A"}</Text>
+      <Text style={styles.itemText}>Plan {item?.plan?.plan || "N/A"}</Text>
       <Text style={styles.itemText}>
-        User ID: {item?.user || "No user available"}
+        Description: {item?.plan?.description || "N/A"}
       </Text>
       <Text style={styles.itemText}>
-        Created At: {new Date(item?.createdAt).toLocaleString()}
+        Price: {`$${item?.plan?.price || "0.00"}`}
       </Text>
       <Text style={styles.itemText}>
-        Updated At: {new Date(item?.updatedAt).toLocaleString()}
+        Status : {item?.plan?.isActive ? "Active" : "InActive"}
       </Text>
-      <Text style={styles.itemText}>Period:</Text>
 
       {/* Map through the period array */}
       {item?.period?.map((periodItem) => (
@@ -71,9 +67,6 @@ const History = () => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Home");
-            console.log({
-              ksksks: "dnksddkj",
-            });
           }}
           style={{
             zIndex: 20,

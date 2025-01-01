@@ -28,10 +28,6 @@ const ChangePassowrd = ({ onSetAuth, onSetAuth2 }) => {
 
   const { otpemail } = useSelector((state) => state?.OnboardingSlice);
 
-  console.log({
-    s: otpemail,
-  });
-
   const { user_isLoading, user_data, user_message } = useSelector(
     (state) => state?.Auth
   );

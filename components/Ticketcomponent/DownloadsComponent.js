@@ -15,11 +15,11 @@ import {
 import * as FileSystem from "expo-file-system";
 import * as MediaLibrary from "expo-media-library";
 import { Alert, Platform } from "react-native";
-import BackgroundDefaultStyle from "../../components/Ticketcomponent/BackgroundDefaultStyle";
-import BackButton from "../../components/Ticketcomponent/BackButton";
+import BackgroundDefaultStyle from "./BackgroundDefaultStyle";
+import BackButton from "./BackButton";
 import pencilIcon from "../../assets/pencil.png";
 import trashIcon from "../../assets/bin.png";
-import HeaderTitle from "../../components/Ticketcomponent/HeaderTitle";
+import HeaderTitle from "./HeaderTitle";
 import downloadIcon from "../../assets/downloads.png";
 import {
   Category_Fun,
@@ -31,22 +31,27 @@ import { useNavigation } from "@react-navigation/native";
 import { formatDate, formatDateandTime } from "../../utills/DateTime";
 import { useApiRequest } from "../../hooks/Mutate";
 const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
+import backArrowIcon from "../../assets/left-arrow.png";
+import DownloadSuccefull from "../../screens/TicketingScreen/DownloadSuccefull";
 import { AntDesign, MaterialIcons, Entypo } from "@expo/vector-icons";
-
-const DownloadFilesPage = () => {
+const DownloadsComponent = ({ maindata, setnewdata }) => {
   const navigation = useNavigation();
   const screenHeight = Dimensions.get("window").height;
   const [downloadLoading, setdownloadLoading] = useState(false);
   const { subscription_data, user_data } = useSelector((state) => state?.Auth);
+  const [successDownload, setSuccessDownload] = useState(false);
 
   const dispatch = useDispatch();
   const { upload_data } = useSelector((state) => state.UploadSlice);
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedUri, setSelectedUri] = useState("");
+  const [selectedItem, setSelectedItem] = useState(null);
+
   console.log({
-    tunff: user_data?.token,
+    nmnm: selectedItem,
   });
+
   const handlePress = (uri) => {
     setSelectedUri(uri);
     setModalVisible(true);
@@ -79,14 +84,15 @@ const DownloadFilesPage = () => {
     setRefreshing(false);
   };
 
+  const filteredData = upload_data?.docs?.filter(
+    (item) => item?.category === maindata?._id
+  );
+
   //
 
   const handleDownload = async (uri) => {
     setdownloadLoading(true);
     try {
-      console.log({
-        ccccc: uri,
-      });
       // Request permissions (necessary for MediaLibrary)
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== "granted") {
@@ -106,10 +112,6 @@ const DownloadFilesPage = () => {
       // Save the file to the user's device
       const asset = await MediaLibrary.createAssetAsync(download.uri);
 
-      console.log({
-        nncnc: asset,
-      });
-
       if (Platform.OS === "android") {
         const albumName = "Ticketing"; // Use a unique name for testing
 
@@ -118,16 +120,11 @@ const DownloadFilesPage = () => {
 
           if (!album) {
             // Create a new album if it doesn't exist
-            console.log(
-              `Album "${albumName}" does not exist. Creating it now...`
-            );
+
             await MediaLibrary.createAlbumAsync(albumName, asset, false);
-            console.log(`Successfully created album: ${albumName}`);
           } else {
             // Add the asset to the existing album
-            console.log(`Album "${albumName}" exists. Adding asset to it...`);
             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-            console.log(`Successfully added asset to album: ${albumName}`);
           }
         } catch (error) {
           // Handle any errors encountered during the process
@@ -136,11 +133,13 @@ const DownloadFilesPage = () => {
       }
 
       setdownloadLoading(false);
+      // const [successDownload, setSuccessDownload] = useState(true);
+      setSuccessDownload(true);
 
-      Alert.alert(
-        "Download complete",
-        "The image has been saved to your device."
-      );
+      // Alert.alert(
+      //   "Download complete",
+      //   "The image has been saved to your device."
+      // );
     } catch (error) {
       console.error("Error downloading the file:", error);
       setdownloadLoading(false);
@@ -151,24 +150,23 @@ const DownloadFilesPage = () => {
       );
     }
   };
-  console.log({
-    // file: upload_data?.docs[0]
-    size: upload_data?.docs[0]?.category,
-    size1: upload_data?.docs[1]?.category,
-    size2: upload_data?.docs[2]?.category,
-    size3: upload_data?.docs[3]?.category,
-  });
 
   const handleAllDownload = async () => {
-    setdownloadLoading(true);
+    if (
+      !filteredData ||
+      !Array.isArray(filteredData) ||
+      filteredData.length === 0
+    ) {
+      setdownloadLoading(false);
 
-    if (!upload_data?.docs || !Array.isArray(upload_data.docs)) {
       Alert.alert(
         "No files to download",
         "No documents were found to download."
       );
       return;
     }
+
+    setdownloadLoading(true);
 
     try {
       // Request permissions
@@ -182,7 +180,7 @@ const DownloadFilesPage = () => {
       }
 
       // Download files concurrently
-      const downloadPromises = upload_data.docs.map(async (doc) => {
+      const downloadPromises = filteredData.map(async (doc) => {
         if (doc.file && Array.isArray(doc.file)) {
           const downloads = doc.file.map(async (file) => {
             const fileUri = file.uri; // Ensure fileUri is defined
@@ -216,6 +214,8 @@ const DownloadFilesPage = () => {
 
       setdownloadLoading(false);
 
+      setSuccessDownload(true);
+
       Alert.alert(
         "Download complete",
         "All files have been saved to your device."
@@ -231,15 +231,37 @@ const DownloadFilesPage = () => {
     }
   };
 
+  const { mutate: deleteTicket, isLoading: isLoadingdeleteTicket } =
+    useApiRequest({
+      url: `${API_BASEURL}v1/vendor/onboarding/delivery-details`,
+      method: "DELETE",
+      token: user_data?.token || "",
+
+      onSuccess: (response) => {
+        // dispatch(checkOtp(true));
+        // setlga(response?.data?.data);
+        console.log({
+          fjfjf: response,
+        });
+      },
+      onError: (error) => {
+        console.error("Registration failed:", error?.response?.data);
+      },
+    });
+
   const RenderDownloadFile = ({ item }) => {
     return (
       <View>
-        {/* <TouchableOpacity style={styles.downloadFileMainContainer}> */}
         <View
           style={styles.downloadFileMainContainer}
           // onPress={() => handlePress(item?.file[0]?.uri)}
         >
-          <TouchableOpacity onPress={() => handlePress(item?.file[0]?.uri)}>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedItem(item);
+              handlePress(item?.file[0]?.uri);
+            }}
+          >
             <Text style={styles.downloadFileText(20)}>
               {item?.file[0]?.title}
             </Text>
@@ -273,7 +295,7 @@ const DownloadFilesPage = () => {
           transparent={true}
           animationType="slide"
           visible={isModalVisible}
-          onRequestClose={closeModal}
+          // onRequestClose={closeModal}
         >
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
@@ -284,9 +306,48 @@ const DownloadFilesPage = () => {
                 style={{ height: "60%", width: "100%" }}
               />
 
-              <TouchableOpacity onPress={closeModal}>
-                <MaterialIcons name="cancel" size={40} color="black" />
-              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: "row",
+                  // justifyContent: "space-between",
+                  justifyContent: "center",
+                  width: "100%",
+                  marginTop: 20,
+                  gap: 40,
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setSelectedItem(null);
+                    closeModal();
+                  }}
+                >
+                  <MaterialIcons name="cancel" size={40} color="black" />
+                </TouchableOpacity>
+
+                {/* <TouchableOpacity
+                  onPress={() => {
+                    // // console.log("djdjdjd");
+                    // deleteTicket();
+                    console.log({
+                      fff: selectedItem?._id,
+                    });
+
+                    const url = `${API_BASEURL}upload/${selectedItem?._id}`; // Include item.id in the URL
+                    deleteTicket({ url }); // Pass the URL dynamically
+                    // console.log({
+                    //   ll: url,
+                    // });
+                  }}
+                >
+                  <AntDesign name="delete" size={40} color="red" />
+                </TouchableOpacity>
+
+                <TouchableOpacity>
+                  <Entypo name="edit" size={24} color="black" />
+                </TouchableOpacity> */}
+              </View>
             </View>
           </View>
         </Modal>
@@ -295,63 +356,86 @@ const DownloadFilesPage = () => {
   };
 
   return (
-    <BackgroundDefaultStyle>
-      <View>
-        <TouchableOpacity
-          onPress={() => navigation.toggleDrawer()}
-          style={{ position: "absolute", top: 20, left: 30, zIndex: 1 }}
-        >
-          <FontAwesome name="navicon" size={24} color="white" />
-        </TouchableOpacity>
-        <View style={styles.bodyHeaderContainer}>
-          <HeaderTitle Title={"Recent"} />
-          <TouchableOpacity
-            style={styles.bodyHeaderButton}
-            onPress={handleAllDownload}
-          >
-            <Text style={styles.bodyHeaderButtonText}>Download all</Text>
-            <Image
-              source={downloadIcon}
-              resizeMode="contain"
-              style={styles.bodyHeaderButtonIcon(20)}
-            />
-          </TouchableOpacity>
-        </View>
-
-        {downloadLoading && (
+    <>
+      {successDownload ? (
+        <DownloadSuccessful Successful={setSuccessDownload} />
+      ) : (
+        <BackgroundDefaultStyle>
           <View>
-            <ActivityIndicator color="white" size="large" />
-          </View>
-        )}
-
-        <View
-          style={{
-            paddingHorizontal: 20,
-            height: screenHeight * 0.8, // Restrict height to 60% of the screen
-          }}
-        >
-          <FlatList
-            data={upload_data?.docs}
-            keyExtractor={(item, index) => item._id || index.toString()} // Ensure a unique key for each item
-            renderItem={({ item }) => <RenderDownloadFile item={item} />}
-            showsVerticalScrollIndicator={false} // Optional: hides the scrollbar for cleaner UI
-            contentContainerStyle={{
-              paddingBottom: 20, // Adds padding at the bottom for smoother scrolling
-            }}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            ListEmptyComponent={
-              <Text
-                style={{ color: "#fff", textAlign: "center", marginTop: 20 }}
+            <TouchableOpacity
+              onPress={() => {
+                setnewdata(null);
+              }}
+              style={{ position: "absolute", top: 20, left: 30, zIndex: 1 }}
+            >
+              <Image
+                source={backArrowIcon}
+                resizeMode="contain"
+                // style={styles.backArrowIconStyle}
+                style={{
+                  height: 30,
+                  width: 30,
+                }}
+              />
+            </TouchableOpacity>
+            <View style={styles.bodyHeaderContainer}>
+              <HeaderTitle Title={"Recent"} />
+              <TouchableOpacity
+                style={styles.bodyHeaderButton}
+                onPress={handleAllDownload}
               >
-                No files available for download.
-              </Text>
-            }
-          />
-        </View>
-      </View>
-    </BackgroundDefaultStyle>
+                <Text style={styles.bodyHeaderButtonText}>Download all</Text>
+                <Image
+                  source={downloadIcon}
+                  resizeMode="contain"
+                  style={styles.bodyHeaderButtonIcon(20)}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {downloadLoading && (
+              <View>
+                <ActivityIndicator color="white" size="large" />
+              </View>
+            )}
+
+            <View
+              style={{
+                paddingHorizontal: 20,
+                height: screenHeight * 0.8, // Restrict height to 60% of the screen
+              }}
+            >
+              <FlatList
+                data={filteredData}
+                keyExtractor={(item, index) => item._id || index.toString()} // Ensure a unique key for each item
+                renderItem={({ item }) => <RenderDownloadFile item={item} />}
+                showsVerticalScrollIndicator={false} // Optional: hides the scrollbar for cleaner UI
+                contentContainerStyle={{
+                  paddingBottom: 20, // Adds padding at the bottom for smoother scrolling
+                }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                ListEmptyComponent={
+                  <Text
+                    style={{
+                      color: "#fff",
+                      textAlign: "center",
+                      marginTop: 20,
+                    }}
+                  >
+                    No files available for download.
+                  </Text>
+                }
+              />
+            </View>
+          </View>
+        </BackgroundDefaultStyle>
+      )}
+    </>
   );
 };
 
@@ -427,4 +511,56 @@ const styles = StyleSheet.create({
   }),
 });
 
-export default DownloadFilesPage;
+export default DownloadsComponent;
+
+export function DownloadSuccessful({ Successful }) {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // navigation.navigate("DownloadFile");
+      Successful(false);
+    }, 2000); // 5 seconds
+
+    // Cleanup the timer when the component unmounts
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#121212",
+        paddingHorizontal: 20,
+        justifyContent: "center",
+      }}
+    >
+      {/* Verification Image */}
+      <View
+        style={{
+          alignItems: "center",
+          marginBottom: 20,
+        }}
+      >
+        <Image
+          source={require("../../assets/ticket/Group 72.png")}
+          style={{
+            width: 250,
+            height: 200,
+          }}
+        />
+      </View>
+      {/* Verification Text */}
+      <Text
+        style={{
+          color: "#FFFFFF",
+          textAlign: "center",
+          fontSize: 34,
+          fontWeight: "700",
+        }}
+      >
+        Download Successful
+      </Text>
+    </View>
+  );
+}

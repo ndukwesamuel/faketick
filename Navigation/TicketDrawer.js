@@ -105,6 +105,16 @@ function CustomDrawerContent(props) {
           label={() => (
             <View style={styles.settingsLabel}>
               {/* <AntDesign name="setting" size={20} color="white" /> */}
+              <Text style={styles.settingsText}>Category</Text>
+            </View>
+          )}
+          onPress={() => navigation.navigate("CategoriesDownload")} // Navigate to the Settings screen
+        />
+
+        <DrawerItem
+          label={() => (
+            <View style={styles.settingsLabel}>
+              {/* <AntDesign name="setting" size={20} color="white" /> */}
               <Text style={styles.settingsText}>Download</Text>
             </View>
           )}

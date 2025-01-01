@@ -22,6 +22,7 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
+import { FontAwesome } from "@expo/vector-icons";
 
 const ChoosePlanCalender = ({ route }) => {
   const { selectedPlan } = route.params;
@@ -30,6 +31,12 @@ const ChoosePlanCalender = ({ route }) => {
   const navigation = useNavigation();
   const { subscription_data, user_data } = useSelector((state) => state?.Auth);
   const dispatch = useDispatch();
+
+  const [overlapped, setOverlapped] = useState([]);
+
+  console.log({
+    jjf: overlapped,
+  });
 
   const months = [
     "Jan",
@@ -45,6 +52,11 @@ const ChoosePlanCalender = ({ route }) => {
     "Nov",
     "Dec",
   ];
+
+  console.log({
+    jjf: overlapped,
+    month: months,
+  });
 
   useEffect(() => {
     Month_Mutation.mutate();
@@ -64,22 +76,8 @@ const ChoosePlanCalender = ({ route }) => {
     },
     {
       onSuccess: (success) => {
-        console.log({ fff: success?.data });
-        // const { overlapped } = success?.data || {};
-        // if (Array.isArray(overlapped) && overlapped.length > 0) {
-        //   const initialSelectedMonths = overlapped.reduce((acc, month) => {
-        //     acc[month] = true; // Mark months in the `overlapped` array as checked
-        //     return acc;
-        //   }, {});
-        //   setSelectedMonths(initialSelectedMonths);
-        // } else {
-        //   setSelectedMonths({}); // Clear all selections if `overlapped` is empty
-        // }
-
-        // Toast.show({
-        //   type: "success",
-        //   text1: `${success?.data?.message}`,
-        // });
+        console.log({ fff: success?.data?.overlapped });
+        setOverlapped(success?.data?.overlapped);
       },
       onError: (error) => {
         Toast.show({
@@ -105,6 +103,7 @@ const ChoosePlanCalender = ({ route }) => {
     {
       onSuccess: (success) => {
         checkout(success?.data);
+
         // Toast.show({
         //   type: "success",
         //   text1: `${success?.data?.message}`,
@@ -202,6 +201,9 @@ const ChoosePlanCalender = ({ route }) => {
             justifyContent: "center", // Center content vertically
             alignItems: "center", // Center content horizontally
             zIndex: 100,
+            position: "absolute",
+            top: 10,
+            left: 10,
           }}
         >
           <Image
@@ -220,19 +222,27 @@ const ChoosePlanCalender = ({ route }) => {
         <View style={styles.mainCardContainer}>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Pro</Text>
+
             <View style={styles.table}>
               {months.map((month, index) => (
                 <View style={styles.tableCheckBox} key={index}>
                   <Text style={styles.monthText}>{month}</Text>
-                  <Checkbox
-                    style={styles.checkBox}
-                    value={!!selectedMonths[month]}
-                    onValueChange={() => toggleMonth(month)}
-                    color={selectedMonths[month] ? "#4630EB" : undefined}
-                  />
+                  {overlapped.includes(month) ? (
+                    // Render cancel icon for overlapped months
+                    <FontAwesome name="times-circle" size={24} color="red" />
+                  ) : (
+                    // Render checkbox for non-overlapped months
+                    <Checkbox
+                      style={styles.checkBox}
+                      value={!!selectedMonths[month]}
+                      onValueChange={() => toggleMonth(month)}
+                      color={selectedMonths[month] ? "#4630EB" : undefined}
+                    />
+                  )}
                 </View>
               ))}
             </View>
+
             <View style={styles.descriptionContainer}>
               <Text style={styles.descriptionText}>
                 You selected {selectedCount} months
@@ -275,8 +285,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     backgroundColor: "#000",
     height: "100%",
-    borderWidth: 1,
-    borderColor: "white",
+    // borderWidth: 1,
+    // borderColor: "white",
   },
   backButton: {
     zIndex: 20,

@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   ActivityIndicator,
+  Linking,
 } from "react-native";
 import { Forminputpassword } from "../components/shared/InputForm";
 import { useDispatch, useSelector } from "react-redux";
@@ -134,10 +135,11 @@ export default function Login({ navigation, onSetAuth }) {
           style={{
             color: "white",
             alignSelf: "flex-end",
-            marginVertical: 10,
+            marginVertical: 20,
           }}
-
-          // onPress={}
+          onPress={() =>
+            Linking.openURL("https://keepreceipts.net/forgetpassword")
+          }
         >
           Forgot password?
         </Text>

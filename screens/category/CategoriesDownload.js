@@ -15,6 +15,7 @@ import planeIcon from "../../assets/ticket/Vector (7).png";
 import education from "../../assets/ticket/Vector (8).png";
 import hanger from "../../assets/ticket/hanger.png";
 import casebox from "../../assets/ticket/case.png";
+import { FontAwesome } from "@expo/vector-icons";
 
 // hanger.png
 import defaultIcon from "../../assets/ticket/Vector (8).png";
@@ -25,9 +26,10 @@ import Toast from "react-native-toast-message";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import DownloadSuccefull from "../TicketingScreen/DownloadSuccefull";
+import DownloadsComponent from "../../components/Ticketcomponent/DownloadsComponent";
 const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 
-const CategoriesPage = ({ route }) => {
+const CategoriesDownload = ({}) => {
   const { category_data } = useSelector((state) => state.UploadSlice);
   const navigation = useNavigation();
   const [isLoading, setisLoading] = useState(false);
@@ -37,45 +39,19 @@ const CategoriesPage = ({ route }) => {
     (state) => state?.Auth
   );
 
-  const categories = [
-    {
-      id: "1",
-      title: "Work travel exp",
-      backgroundColor: "#64CDDB",
-      icon: planeIcon,
-    },
-    {
-      id: "2",
-      title: "Work related education",
-      backgroundColor: "#596174",
-      icon: planeIcon,
-    },
-    {
-      id: "3",
-      title: "Work clothing",
-      backgroundColor: "#F7D794",
-      icon: planeIcon,
-    },
-    {
-      id: "4",
-      title: "Other work related exp",
-      backgroundColor: "#F8A5C2",
-      icon: planeIcon,
-    },
-    {
-      id: "5",
-      title: "Gifts and donations",
-      backgroundColor: "#E77F67",
-      icon: planeIcon,
-    },
-  ];
+  const [downloadData, setDownloadData] = useState("");
+
   // setisLoading(false);
 
-  const { comment, imageUri } = route.params?.image_data; // Access the passed data
-  console.log({
-    comment,
-    imageUri,
-  });
+  // const { comment, imageUri } = route?.params?.image_data; // Access the passed data
+  // console.log({
+  //   comment,
+  //   imageUri,
+  // });
+
+  let comment = "";
+
+  let imageUri = "";
   // const { imageUri } = route.params; // Access the passed data
 
   const Upload_Mutation = useMutation(
@@ -153,89 +129,123 @@ const CategoriesPage = ({ route }) => {
       },
     }
   );
-
   const handlesub = async (item) => {
     console.log({
-      zzzz: item?._id,
+      kfkfkf: item,
     });
-    setisLoading(true);
 
-    // const cloudinaryUrl = "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload";
-    // const uploadPreset = "YOUR_UPLOAD_PRESET"; // Create an unsigned preset in your Cloudinary dashboard
-
-    const cloudName = "dkzds0azx"; // Replace with your Cloudinary cloud name
-    const uploadPreset = "ydnmnjxq"; // Replace with your Cloudinary upload preset
-    const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
-
-    // Prepare the form data for Cloudinary
-    const formData = new FormData();
-    formData.append("file", {
-      uri: imageUri,
-      type: "image/jpeg", // Adjust based on the image type
-      name: "upload.jpg",
-    });
-    formData.append("upload_preset", uploadPreset);
-
-    try {
-      // Upload the image to Cloudinary
-      const response = await axios.post(cloudinaryUrl, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      const uploadedImageUrl = response.data;
-      // const uploadedImageUrl = response.data.secure_url;
-      console.log("Cloudinary URL:", uploadedImageUrl);
-      // Pass the uploaded image URL to your API
-
-      const imageSize = uploadedImageUrl.bytes;
-
-      console.log({
-        sjsjhhd: imageSize,
-      });
-      setisLoading(false);
-
-      // let       [{uri: "", type: "", size:"",  title: ""}]
-
-      let data = {
-        category: item?._id,
-        file: [
-          {
-            uri: uploadedImageUrl?.secure_url, //"https://res.cloudinary.com/dkzds0azx/image/upload/v1734535641/checks/fdslzoihhzpceclga5lt.jpg",
-
-            type: uploadedImageUrl?.format,
-            size: uploadedImageUrl?.bytes,
-            title: comment,
-          },
-        ],
-      };
-
-      console.log({
-        sjsjhhd: data,
-      });
-      setisLoading(false);
-
-      Upload_Mutation.mutate(data);
-
-      setisLoading(false);
-    } catch (error) {
-      setisLoading(false);
-      console.error("Cloudinary upload failed:", error);
-
-      console.log({
-        nxxx: error?.response?.data?.error,
-      });
-      Toast.show({
-        type: "error",
-        text1: "Image upload failed",
-        text2: error.message,
-      });
-    }
+    setDownloadData(item);
   };
 
-  console.log({
-    oo: category_data?.docs,
-  });
+  // const { mutate: allDownload, isLoading: isLoadingallDownload } =
+  //   useApiRequest({
+  //     url: `${API_BASEURL}receipt/many-download`,
+  //     method: "GET",
+  //     token: user_data?.token || "",
+  //     onSuccess: (response) => {
+  //       // dispatch(checkOtp(true));
+  //       // setlga(response?.data?.data);
+  //       console.log({
+  //         kdkd: response?.data,
+  //       });
+  //     },
+  //     onError: (error) => {
+  //       console.log({
+  //         nnnn: error?.response?.data,
+  //       });
+  //       // console.error("Registration failed:", error?.response?.data);
+
+  //       Toast.show({
+  //         type: "error",
+  //         text1: `${error?.response?.data?.message || "Request failed."}`,
+  //       });
+  //     },
+  //   });
+
+  // const handlesub = async (item) => {
+  //   console.log({
+  //     zzzz: item?._id,
+  //   });
+  //   setisLoading(true);
+
+  //   // const cloudinaryUrl = "https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload";
+  //   // const uploadPreset = "YOUR_UPLOAD_PRESET"; // Create an unsigned preset in your Cloudinary dashboard
+
+  //   const cloudName = "dkzds0azx"; // Replace with your Cloudinary cloud name
+  //   const uploadPreset = "ydnmnjxq"; // Replace with your Cloudinary upload preset
+  //   const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+  //   // Prepare the form data for Cloudinary
+  //   const formData = new FormData();
+  //   formData.append("file", {
+  //     uri: imageUri,
+  //     type: "image/jpeg", // Adjust based on the image type
+  //     name: "upload.jpg",
+  //   });
+  //   formData.append("upload_preset", uploadPreset);
+
+  //   try {
+  //     // Upload the image to Cloudinary
+  //     const response = await axios.post(cloudinaryUrl, formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+  //     const uploadedImageUrl = response.data;
+  //     // const uploadedImageUrl = response.data.secure_url;
+  //     console.log("Cloudinary URL:", uploadedImageUrl);
+  //     // Pass the uploaded image URL to your API
+
+  //     const imageSize = uploadedImageUrl.bytes;
+
+  //     console.log({
+  //       sjsjhhd: imageSize,
+  //     });
+  //     setisLoading(false);
+
+  //     // let       [{uri: "", type: "", size:"",  title: ""}]
+
+  //     let data = {
+  //       category: item?._id,
+  //       file: [
+  //         {
+  //           uri: uploadedImageUrl?.secure_url, //"https://res.cloudinary.com/dkzds0azx/image/upload/v1734535641/checks/fdslzoihhzpceclga5lt.jpg",
+
+  //           type: uploadedImageUrl?.format,
+  //           size: uploadedImageUrl?.bytes,
+  //           title: comment,
+  //         },
+  //       ],
+  //     };
+
+  //     console.log({
+  //       sjsjhhd: data,
+  //     });
+  //     setisLoading(false);
+
+  //     Upload_Mutation.mutate(data);
+
+  //     setisLoading(false);
+  //   } catch (error) {
+  //     setisLoading(false);
+  //     console.error("Cloudinary upload failed:", error);
+
+  //     console.log({
+  //       nxxx: error?.response?.data?.error,
+  //     });
+  //     Toast.show({
+  //       type: "error",
+  //       text1: "Image upload failed",
+  //       text2: error.message,
+  //     });
+  //   }
+  // };
+
+  // console.log({
+  //   oo: category_data?.docs,
+  // });
+
+  // {"size": "6763c346c21fd255a0a0b524", "size1": "6763c346c21fd255a0a0b524", "size2": "6763c346c21fd255a0a0b524", "size3": "6763c2f8c21fd255a0a0b518"}
 
   const categoryMap = {
     "Work travel exp": { icon: planeIcon, color: "#64CDDB" },
@@ -252,6 +262,11 @@ const CategoriesPage = ({ route }) => {
     };
     const { icon, color } = category;
 
+    console.log({
+      llll: item?.id,
+      kaka: item?.name,
+    });
+
     return (
       <TouchableOpacity
         style={[styles.categoryCard, { backgroundColor: color }]}
@@ -267,40 +282,34 @@ const CategoriesPage = ({ route }) => {
     );
   };
 
-  // const renderCategory = ({ item }) => {
-  //   // Get the icon and color based on the item name or use defaults
-  //   const category = categoryMap[item.name] || {
-  //     icon: defaultIcon,
-  //     color: "#CCCCCC",
-  //   };
-  //   const { icon, color } = category;
-
-  //   return (
-  //     <TouchableOpacity
-  //       style={[styles.categoryCard, { backgroundColor: color }]}
-  //       onPress={() => handlesub(item)}
-  //     >
-  //       <Image
-  //         source={icon}
-  //         resizeMode="contain"
-  //         style={styles.categoryCardIcon}
-  //       />
-  //       <Text style={styles.categoryCardDescription}>{item.name}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
-
   return (
     <>
-      {success_upload ? (
-        <DownloadSuccefull />
+      {/* {data ?   : */}
+
+      {downloadData ? (
+        <DownloadsComponent
+          maindata={downloadData}
+          setnewdata={setDownloadData}
+        />
       ) : (
         <BackgroundDefaultStyle>
-          <BackButton />
-          <HeaderTitle Title={"Select Category"} />
-          {(Upload_Mutation.isLoading || isLoading) && (
-            <ActivityIndicator color="white" size="large" />
-          )}
+          <TouchableOpacity
+            onPress={() => navigation.toggleDrawer()}
+            style={{ position: "absolute", top: 20, left: 30, zIndex: 1 }}
+          >
+            <FontAwesome name="navicon" size={24} color="white" />
+          </TouchableOpacity>
+          <View
+            style={{
+              // justifyContent: "center",
+              // flex: 1,
+              // borderWidth: 1,
+              borderColor: "white",
+              alignItems: "center",
+            }}
+          >
+            <HeaderTitle Title={"Select Category"} />
+          </View>
 
           <FlatList
             data={category_data?.docs}
@@ -341,4 +350,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoriesPage;
+export default CategoriesDownload;

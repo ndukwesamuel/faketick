@@ -99,7 +99,7 @@ export const Get_All_Uplaod_Fun = createAsyncThunk(
         },
       };
 
-      const response = await axios.get(`${API_BASEURL}uploads`, config);
+      const response = await axios.get(`${API_BASEURL}user-ticketing`, config);
       return response.data;
     } catch (error) {
       console.log({

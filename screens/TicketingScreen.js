@@ -76,10 +76,6 @@ const TicketingScreen = ({}) => {
 
   const today = new Date();
 
-  console.log({
-    james: user_profile_data?.subscription?.period,
-  });
-
   // Format date components
   const days = [
     "Sunday",
@@ -192,11 +188,8 @@ const TicketingScreen = ({}) => {
                   fontWeight: "400",
                 }}
               >
-                {console.log({
-                  xzzz: user_profile_data?.subscription,
-                })}
                 Your free trial ends on
-                {`${formatDate(
+                {` ${formatDate(
                   user_profile_data?.subscription?.period[0]?.exp_date
                 )}`}
               </Text>

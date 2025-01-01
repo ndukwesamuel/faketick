@@ -19,7 +19,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // onBoarding screen and actions
 import { onBoaringAction, reset_isOnboarding } from "./Redux/OnboardingSlice";
-import OnBoardingPage from "./screens/OnboardingPage";
 import Auth from "./screens/Auth";
 
 // otp screen
@@ -65,11 +64,9 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-  console.log(API_BASEURL);
   const STRIPE_KEY =
     "pk_test_51PNBosC8HrxgN6La95JbW9cKmOFYgeKyrEKTMvBaFUTA8E3PM4ovY0xG6BBo8kZf8bq0zzGBjHf1yYsKzyb44Sgs00UVbHkUWi";
 
-  // "pk_test_51NREY2IOG1LagWsBM1XjuadyjIdl4tpgL5CGNnUqihzEzXGpSvtURCJoVCRN2awhFFRvhKZ0Yu3SNhTHL7j85sJR00IE1tMfUn";
   const RETURN_URL = "ticketing://stripe/return";
   return (
     <QueryClientProvider client={queryClient}>
@@ -106,8 +103,6 @@ export const Loading = () => {
 export const StartScreen = ({}) => {
   const { isOnboarding } = useSelector((state) => state.OnboardingSlice);
 
-  console.log({ isOnboarding });
-
   const dispatch = useDispatch();
 
   return <Auth />;
@@ -139,10 +134,6 @@ const MainScreen = () => {
   const dispatch = useDispatch();
 
   // dispatch(reset_login());
-
-  console.log({
-    gkdkd: user_profile_data?.subscription,
-  });
 
   useEffect(() => {
     dispatch(Subscription_Fun());

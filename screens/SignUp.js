@@ -20,6 +20,7 @@ import { useMutation } from "react-query";
 import Toast from "react-native-toast-message";
 import axios from "axios";
 import Checkbox from "expo-checkbox";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 const API_BASEURL = "https://ticketing-backend-qt14.onrender.com/api/";
 console.log({
@@ -28,102 +29,6 @@ console.log({
 const fetchStates = async () => {
   const response = await axios.get(`${API_BASEURL}{{base_url}}/v1/states`);
   return response.data;
-};
-
-const stateLgaData = {
-  "New South Wales": [
-    "Albury City Council",
-    "Armidale Regional Council",
-    "Ballina Shire Council",
-    "Balranald Shire Council",
-    "Bathurst Regional Council",
-    "Bayside Council",
-    "Bega Valley Shire Council",
-    "Bellingen Shire Council",
-    "Berrigan Shire Council",
-    "Blacktown City Council",
-    // Add more LGAs
-  ],
-  Victoria: [
-    "Alpine Shire Council",
-    "Ararat Rural City Council",
-    "Ballarat City Council",
-    "Banyule City Council",
-    "Bass Coast Shire Council",
-    "Baw Baw Shire Council",
-    "Bayside City Council",
-    "Benalla Rural City Council",
-    "Boroondara City Council",
-    "Brimbank City Council",
-    // Add more LGAs
-  ],
-  Queensland: [
-    "Balonne Shire Council",
-    "Banana Shire Council",
-    "Barcaldine Regional Council",
-    "Barcoo Shire Council",
-    "Blackall-Tambo Regional Council",
-    "Brisbane City Council",
-    "Bundaberg Regional Council",
-    "Burdekin Shire Council",
-    "Cairns Regional Council",
-    "Carpentaria Shire Council",
-    // Add more LGAs
-  ],
-  "Western Australia": [
-    "Albany City Council",
-    "Armadale City Council",
-    "Ashburton Shire Council",
-    "Augusta-Margaret River Shire Council",
-    "Bassendean Town Council",
-    "Bayswater City Council",
-    "Belmont City Council",
-    "Beverley Shire Council",
-    "Boddington Shire Council",
-    "Boyup Brook Shire Council",
-    // Add more LGAs
-  ],
-  "South Australia": [
-    "Adelaide City Council",
-    "Adelaide Hills Council",
-    "Alexandrina Council",
-    "Barossa Council",
-    "Berri Barmera Council",
-    "Campbelltown City Council",
-    "Ceduna District Council",
-    "Charles Sturt City Council",
-    "Clare and Gilbert Valleys Council",
-    "Coober Pedy District Council",
-    // Add more LGAs
-  ],
-  Tasmania: [
-    "Break O'Day Council",
-    "Brighton Council",
-    "Burnie City Council",
-    "Central Coast Council",
-    "Central Highlands Council",
-    "Circular Head Council",
-    "Clarence City Council",
-    "Devonport City Council",
-    "Dorset Council",
-    "George Town Council",
-    // Add more LGAs
-  ],
-  "Northern Territory": [
-    "Alice Springs Town Council",
-    "Barkly Regional Council",
-    "Belyuen Shire Council",
-    "Central Desert Regional Council",
-    "Coomalie Community Government Council",
-    "Darwin City Council",
-    "East Arnhem Regional Council",
-    "Katherine Town Council",
-    "Litchfield Council",
-    "MacDonnell Regional Council",
-    // Add more LGAs
-  ],
-  "Australian Capital Territory": ["ACT Government (Single Local Area)"],
-  // Add more states and LGAs
 };
 
 export default function SignUp({ navigation, onSetAuth }) {
@@ -139,18 +44,43 @@ export default function SignUp({ navigation, onSetAuth }) {
   const [selectedState, setSelectedState] = useState(null);
   const [selectedLga, setSelectedLga] = useState(null);
   const [lgas, setLgas] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const locations = [
+    "Australian Capital Territory",
+    "Northern Territory",
+    "Tasmania",
+    "South Australia",
+    "Western Australia",
+    "Queensland",
+    "Victoria",
+    "New South Wales",
+  ];
+
+  const handleLocationSelect = (selectedLocation) => {
+    setLocation(selectedLocation);
+    setShowDropdown(false);
+  };
 
   const handleSubmit = () => {
     // Validate the form fields
-    if (
-      !firstName ||
-      !lastName ||
-      !email ||
-      !phoneNumber ||
-      !selectedLga ||
-      !password
-    ) {
-      Alert.alert("Error", "Please fill in all fields.");
+    const fields = [
+      { name: "First Name", value: firstName },
+      { name: "Last Name", value: lastName },
+      { name: "Email", value: email },
+      { name: "Phone Number", value: phoneNumber },
+      { name: "LGA", value: location },
+      { name: "Password", value: password },
+    ];
+
+    const missingFields = fields
+      .filter((field) => !field.value)
+      .map((field) => field.name);
+
+    if (missingFields.length > 0) {
+      Alert.alert(
+        "Error",
+        `Please fill in the following fields:\n${missingFields.join("\n")}`
+      );
       return;
     }
 
@@ -210,30 +140,6 @@ export default function SignUp({ navigation, onSetAuth }) {
         });
         onSetAuth("verify");
       },
-      // onError: (error) => {
-      //   console.log({
-      //     kkk: error?.response?.data?.error,
-      //   });
-
-      //   const constraints = error?.response?.data[0]?.constraints;
-
-      //   if (constraints) {
-      //     const errorKeys = Object.keys(constraints);
-
-      //     errorKeys.forEach((key) => {
-      //       Toast.show({
-      //         type: "error",
-      //         text1: constraints[key], // Display the constraint message
-      //       });
-      //     });
-      //   } else {
-      //     Toast.show({
-      //       type: "error",
-      //       text1: error?.response?.data || "An unexpected error occurred.",
-      //     });
-      //     return;
-      //   }
-      // },
 
       onError: (error) => {
         console.log({
@@ -273,7 +179,7 @@ export default function SignUp({ navigation, onSetAuth }) {
 
   return (
     <View style={styles.container}>
-      {/* Google Sign-in Button */}
+      {/*  Sign-in Button */}
       <TouchableOpacity style={styles.googleButton}>
         <Image
           source={require("../assets/ticket/flat-color-icons_google.png")}
@@ -366,40 +272,52 @@ export default function SignUp({ navigation, onSetAuth }) {
           value={phoneNumber}
           onChangeText={setPhoneNumber}
         />
-        {/* <TextInput
-          style={styles.input}
-          placeholder="Location"
-          placeholderTextColor="#FFFFFF"
-          value={location}
-          onChangeText={setLocation}
-        /> */}
 
         <TouchableOpacity
-          style={{
-            // backgroundColor: "#007bff",
-            // padding: 10,
-            // borderRadius: 5,
-            backgroundColor: "#1E1E1E",
-            color: "#FFFFFF",
-            padding: 12,
-            marginBottom: 15,
-            borderRadius: 8,
-            borderWidth: 1,
-            borderColor: "white",
-          }}
-          onPress={() => setModalVisible(true)}
+          style={styles.inputContainer}
+          onPress={() => setShowDropdown((prev) => !prev)}
         >
-          <Text
+          <View
             style={{
-              color: "#fff",
-              fontSize: 16,
+              position: "absolute",
+              zIndex: 100,
+              right: 10,
+              top: 10,
             }}
           >
-            {selectedLga
-              ? `${selectedLga}, ${selectedState}`
-              : "Select Location"}
-          </Text>
+            <FontAwesome6 name="chevron-down" size={24} color="white" />
+          </View>
+          <Text style={styles.input}>{location || "Select a location"}</Text>
         </TouchableOpacity>
+
+        {showDropdown && (
+          <View style={styles.dropdown}>
+            <FlatList
+              data={locations}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{
+                    padding: 12,
+                    // borderBottomWidth: 1,
+                    borderWidth: 1,
+                    borderBottomColor: "white",
+                  }}
+                  onPress={() => handleLocationSelect(item)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "white",
+                    }}
+                  >
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
 
         <Forminputpassword
           placeholder="Enter your password"
@@ -452,100 +370,6 @@ export default function SignUp({ navigation, onSetAuth }) {
           )}
         </View>
       </View>
-
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-          }}
-        >
-          <View
-            style={{
-              width: "80%",
-              backgroundColor: "#fff",
-              borderRadius: 10,
-              padding: 20,
-              height: "80%",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                marginBottom: 10,
-              }}
-            >
-              Select State
-            </Text>
-            <FlatList
-              data={Object.keys(stateLgaData)}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#ddd",
-                  }}
-                  onPress={() => handleStateSelect(item)}
-                >
-                  <Text
-                    style={{
-                      fontSize: 16,
-                    }}
-                  >
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
-
-            {selectedState && (
-              <>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "bold",
-                    marginTop: 20,
-                  }}
-                >
-                  Select LGA {selectedState}
-                </Text>
-                <FlatList
-                  data={lgas}
-                  keyExtractor={(item) => item}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={{
-                        padding: 10,
-                        borderBottomWidth: 1,
-                        borderBottomColor: "#ddd",
-                      }}
-                      onPress={() => handleLgaSelect(item)}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 16,
-                        }}
-                      >
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              </>
-            )}
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 }
